@@ -1,0 +1,42 @@
+/*
+ * ---------------------------------
+ * base
+ * ---------------------------------
+ */
+
+
+/* 样式 */
+/* --------------------------------- */
+body {
+    margin: 0 auto;
+    font: 14px / 1.5 "microsoft yahei", Arial, sans-serif;
+    color: #666;
+    background: #e1e1e1;
+}
+
+.wrapper {
+    margin: 0 auto;
+    width: 1200px;
+}
+
+.clearfix {
+    &:after {
+        display: block;
+        clear: both;
+        visibility: hidden;
+        height: 0;
+        content: "";
+    }
+}
+
+.clear {
+    clear: both;
+}
+
+a {
+    text-decoration: none;
+    outline: none;
+    &:hover {
+        text-decoration: underline;
+    }
+}

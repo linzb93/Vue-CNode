@@ -1,0 +1,13 @@
+@import 'assist/mixin';
+
+@import 'base/reset';
+@import 'base/base';
+@import 'base/hack';
+
+//全局样式
+main {
+    margin-top: 15px;
+    .wrapper {
+        background: #fff;
+    }
+}

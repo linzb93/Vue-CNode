@@ -1,0 +1,74 @@
+/*
+ * ---------------------------------
+ * mixin
+ * ---------------------------------
+ */
+
+
+/* mixin */
+/* --------------------------------- */
+
+/* 单行文字水平垂直方向居中 */
+@mixin textCenter($width, $height, $display: null) {
+	display: $display;
+	width: $width;
+	height: $height;
+	text-align: center;
+	line-height: $height;
+}
+
+/* 单行文字垂直方向居中 */
+@mixin textMiddle($height) {
+    height: $height;
+    line-height: $height;
+}
+
+/* 块状内容水平垂直方向居中 */
+@mixin blockCenter($position: absolute) {
+	position: $position;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	margin: auto;
+}
+
+%blockCenter {
+    @include blockCenter;
+}
+
+/* 兼容IE7的inline-block */
+@mixin inlineBlock() {
+	display: inline-block;
+    *display:inline;
+    *zoom:1;
+}
+
+/* 三角形 */
+@mixin tri($dir, $size, $color) {
+    height: 0;
+    width: 0;
+    border: $size solid;
+    border-#{$dir}-width: 0;
+    @if $dir == 'top' {
+      	border-color: transparent transparent $color;
+    }@else if $dir == 'right' {
+      	border-color: transparent transparent transparent $color;
+    }@else if $dir == 'bottom' {
+      	border-color: $color transparent transparent;
+    }@else if $dir == 'left' {
+      	border-color: transparent $color transparent transparent;
+    }
+}
+
+/* 圆形 */
+@mixin circle($size) {
+    width: $size;
+    height: $size;
+    border-radius: 50%;
+}
+ @mixin ellipse() {
+     overflow: hidden;
+     text-overflow: ellipsis;
+     white-space: nowrap;
+ }
