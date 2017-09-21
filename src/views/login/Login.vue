@@ -1,72 +1,101 @@
 <template>
     <el-dialog
         title="登录"
-        size="small"
+        size="tiny"
         :visible="visible">
-        <el-form>
+        <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
             <el-form-item
                 label="Token"
                 label-width="50px"
                 label-position="left"
+                prop="token"
                 >
                 <el-input
                     placeholder="请输入token"
                     size="small"
-                    v-model.lazy="token">
+                    v-model.lazy.trim="ruleForm.token">
                 </el-input>
             </el-form-item>
             <p class="login-form-tips">
                 <a href="https://cnodejs.org/setting" target="_blank">如何查看 Access Token？</a>
             </p>
+            <el-form-item>
+                <el-button @click="cancel">取消</el-button>
+                <el-button type="primary" @click="submitForm('ruleForm')">确定</el-button>
+            </el-form-item>
         </el-form>
-        <div slot="footer">
-            <el-button @click="loginHandle(false)">取消</el-button>
-            <el-button type="primary" @click.native="loginHandle(true)">确定</el-button>
-        </div>
     </el-dialog>
 </template>
 
 <script>
     import { tokenValidate } from '@/service';
     import { ls } from '@/utils/store';
-    import router from '@/router'
+    import throttle from 'lodash/throttle';
     
     export default {
         name: 'Login',
         data() {
+            var vToken = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('token不能为空'))
+                } else {
+                    this.loginHandle(value, callback);
+                }
+            };
             return {
                 visible: false,
-                token: ''
+                ruleForm: {
+                    token: ''
+                },
+                rules: {
+                    token: [
+                        { validator: vToken, trigger: 'submit'}
+                    ]
+                }
             }
         },
         methods: {
-            loginHandle(isSubmit) {
-                if (!isSubmit) {
-                    this.$router.push('/');
-                    return;
-                }
-                
-                tokenValidate(this.token)
+            limitSubmit(formName) {
+                this.submitForm = throttle(() => {
+                    this.$refs[formName].validate(valid => {
+                        if (!valid) {
+                            return false;
+                        }
+                    })
+                }, 3000);
+            },
+            cancel() {
+                this.$router.push('/');
+            },
+            submitForm(formName) {},
+            loginHandle(token, callback) {
+                tokenValidate(token)
                 .then(res => {
                     var data = res.data;
+                    var ctx = this;
+                    
                     this.$store.commit('SAVE_INFO', {
                         name: data.loginname,
                         id: data.id,
                         avatar: data.avatar_url
                     });
-                    this.$store.commit('SAVE_TOKEN', this.token);
-                    ls.store('token', this.token);
+                    this.$store.commit('SAVE_TOKEN', token);
+                    ls.store('token', token);
                     this.$message({
                         message: '登录成功!',
                         duration: 1000,
                         onClose() {
-                            router.push('/');
+                            ctx.$router.push('/');
                         }
                     });
+                    callback();
+                }).catch(res => {
+                    callback(new Error('token不正确'));
                 });
             }
         },
         created() {
+            this.limitSubmit('ruleForm');
             if (ls.store('token')) {
                 this.$router.push('/');
             }

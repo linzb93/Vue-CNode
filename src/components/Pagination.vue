@@ -34,7 +34,8 @@
 
 <style lang="scss">
     .pagination {
-        margin-top: 20px;
+        margin: 20px 0 0 20px;
+        padding-bottom: 10px;
         a {
             color: #21a9de;
             margin: 0 5px;
