@@ -66,7 +66,7 @@ export function collectTopic(accesstoken, topic_id) {
 
 // 取消收藏主题
 export function decollectTopic(accesstoken, topic_id) {
-    return service.post('/topic_collect/decollect', {
+    return service.post('/topic_collect/de_collect', {
         accesstoken,
         topic_id
     });

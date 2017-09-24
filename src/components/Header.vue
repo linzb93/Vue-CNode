@@ -7,12 +7,7 @@
                 </a>
             </h1>
             <nav>
-                <a
-                    v-for="item in nav"
-                    :href="item.url"
-                    :key="item.name">
-                    {{item.name}}
-                </a>
+                <a v-for="item in nav" :href="item.url" :key="item.name">{{item.name}}</a>
             </nav>
             <div class="login-info" v-if="isLogin">
                 <img class="avatar" :src="avatar" alt="">
