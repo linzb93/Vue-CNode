@@ -4,6 +4,8 @@ import CoHeader from '@/components/header';
 import Login from '@/views/login/Login';
 import Index from '@/views/index/Index';
 import Detail from '@/views/detail/Detail';
+import User from '@/views/user/User';
+import Message from '@/views/message/Message';
 
 Vue.use(Router);
 
@@ -27,6 +29,20 @@ export default new Router({
             components: {
                 header: CoHeader,
                 main: Detail
+            }
+        },
+        {
+            path: '/user/:id',
+            components: {
+                header: CoHeader,
+                main: User
+            }
+        },
+        {
+            path: '/message',
+            components: {
+                header: CoHeader,
+                main: Message
             }
         },
         {
