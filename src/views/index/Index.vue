@@ -36,55 +36,40 @@
             :isLastPage="isLastPage"
             @change="changePage"
             v-model="changeTab"
-            v-show="!showEmptyTips"></pagination>
+            v-show="!showEmptyTips" />
             <empty-tips v-show="showEmptyTips" />
+            <editor title="发布新帖" type="post"/>
         </div>
     </main>
 </template>
 
 <script>
+    import { mapState } from 'vuex';
     import { ls } from '@/utils/store';
     import { getTopicList } from '@/service';
     import { shorten, ago } from '@/filter';
     import Pagination from '@/components/Pagination';
     import EmptyTips from '@/components/Empty';
+    import Editor from '@/components/Editor';
 
     export default {
         name: 'Index',
         components: {
             Pagination,
-            EmptyTips
+            EmptyTips,
+            Editor
         },
         data() {
             return {
-                tabs: [
-                    {
-                        id: 'all',
-                        name: '全部'
-                    },
-                    {
-                        id: 'good',
-                        name: '精华'
-                    },
-                    {
-                        id: 'share',
-                        name: '分享'
-                    },
-                    {
-                        id: 'ask',
-                        name: '问答'
-                    },
-                    {
-                        id: 'job',
-                        name: '招聘'
-                    },
-                ],
                 tabId: 'all',
                 topics: [],
                 showEmptyTips: false, //无内容返回时显示
                 changeTab: false, //分页重置的标志
                 isLastPage: false //是否是最后一页
             };
+        },
+        computed: {
+            ...mapState(['tabs'])
         },
         methods: {
             getTopicList(tab = '', page = 1) {
@@ -141,22 +126,23 @@
 
 <style lang="scss">
     @import "../../style/assist/mixin";
+    @import "../../style/assist/variable";    
 
     .topic-tab {
         background: #f5f5f5;
         padding: 10px;
         a {
             padding: 5px;
-            color: #80bd01;
+            color: $mainColor;
             margin: 0 10px;
             border-radius: 2px;
             &:hover {
-                color: #9ee805;
+                color: lighten($mainColor, 5%);
                 text-decoration: none;
             }
             &.on {
                 color: #fff;
-                background: #80bd01;
+                background: $mainColor;
             }
         }
     }
@@ -208,10 +194,10 @@
             margin: 0 3px;
         }
         .topic-top {
-            color: #80bd01;
+            color: $mainColor;
         }
         .topic-good {
-            color: #ef4141;
+            color: $good;
         }
         .topic-time {
             float: right;
@@ -219,6 +205,22 @@
             text-align: right;
             color: #666;
             line-height: 2;
+        }
+    }
+    .post-editor-container {
+        border-top: $border;
+        padding: 15px 30px;
+        h3 {
+            font-size: 18px;
+            color: #333;
+            font-weight: bold;
+        }
+        .el-select,
+        .el-button {
+            margin-top: 10px;
+        }
+        .el-input {
+            margin-bottom: 20px;
         }
     }
 </style>

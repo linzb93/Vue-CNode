@@ -82,6 +82,7 @@
                     this.$store.commit('SAVE_TOKEN', token);
                     ls.store('token', token);
                     this.$message({
+                        type: 'success',
                         message: '登录成功!',
                         duration: 1000,
                         onClose() {
@@ -108,7 +109,6 @@
     .login-form-tips {
         margin-top: 9px;
         text-align: right;
-        font-size: 14px;
         a {
             color: #333;
         }
