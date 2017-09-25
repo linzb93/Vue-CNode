@@ -38,7 +38,10 @@
             v-model="changeTab"
             v-show="!showEmptyTips" />
             <empty-tips v-show="showEmptyTips" />
-            <editor title="发布新帖" type="post"/>
+            <editor
+                title="发布新帖"
+                type="post" 
+                @post="postTopic"/>
         </div>
     </main>
 </template>
@@ -46,7 +49,7 @@
 <script>
     import { mapState } from 'vuex';
     import { ls } from '@/utils/store';
-    import { getTopicList } from '@/service';
+    import { getTopicList, createNewTopic } from '@/service';
     import { shorten, ago } from '@/filter';
     import Pagination from '@/components/Pagination';
     import EmptyTips from '@/components/Empty';
@@ -69,7 +72,7 @@
             };
         },
         computed: {
-            ...mapState(['tabs'])
+            ...mapState(['tabs', 'token'])
         },
         methods: {
             getTopicList(tab = '', page = 1) {
@@ -115,6 +118,23 @@
             },
             changePage(curPage) {
                 this.getTopicList(this.tabId, curPage);
+            },
+            postTopic({title, tab, content}) {
+                var ctx = this;
+                createNewTopic({
+                    accesstoken: ctx.token,
+                    title,
+                    tab,
+                    content
+                })
+                .then(res => {
+                    if (res.success === true) {
+                        this.$message({
+                            type: 'success',
+                            message: '发布成功！'
+                        });
+                    }
+                });
             }
         },
         created() {

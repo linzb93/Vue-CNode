@@ -79,12 +79,10 @@ export function getUserCollect(username) {
 
 // 新建评论
 export function createReply(option) {
-    return service.get('topic/' + option.topic_id + '/replies', {
-        params: {
-            accesstoken: option.accesstoken,
-            content: option.content,
-            reply_id: option.reply_id
-        }
+    return service.post('topic/' + option.topic_id + '/replies', {
+        accesstoken: option.accesstoken,
+        content: option.content,
+        reply_id: option.reply_id
     });
 }
 

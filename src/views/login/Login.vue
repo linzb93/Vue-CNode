@@ -2,7 +2,7 @@
     <el-dialog
         title="登录"
         size="tiny"
-        :visible="visible">
+        @close="cancel">
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
             <el-form-item
                 label="Token"
@@ -30,7 +30,6 @@
 <script>
     import { tokenValidate } from '@/service';
     import { ls } from '@/utils/store';
-    import throttle from 'lodash/throttle';
     
     export default {
         name: 'Login',
@@ -43,7 +42,7 @@
                 }
             };
             return {
-                visible: false,
+                canSubmit: true,
                 ruleForm: {
                     token: ''
                 },
@@ -55,25 +54,23 @@
             }
         },
         methods: {
-            limitSubmit(formName) {
-                this.submitForm = throttle(() => {
-                    this.$refs[formName].validate(valid => {
-                        if (!valid) {
-                            return false;
-                        }
-                    })
-                }, 3000);
-            },
             cancel() {
                 this.$router.push('/');
             },
-            submitForm(formName) {},
+            submitForm(formName) {
+                this.$refs[formName].validate(valid => {
+                    if (!valid) {
+                        return false;
+                    }
+                });
+            },
             loginHandle(token, callback) {
+                this.canSubmit = false;
                 tokenValidate(token)
                 .then(res => {
                     var data = res.data;
                     var ctx = this;
-                    
+                    this.canSubmit = true;
                     this.$store.commit('SAVE_INFO', {
                         name: data.loginname,
                         id: data.id,
@@ -96,11 +93,9 @@
             }
         },
         created() {
-            this.limitSubmit('ruleForm');
             if (ls.store('token')) {
                 this.$router.push('/');
             }
-            this.visible = true;
         }
     };
 </script>

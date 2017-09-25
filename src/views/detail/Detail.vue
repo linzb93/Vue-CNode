@@ -5,8 +5,8 @@
             <div class="topic-info clearfix">
                 <span>发帖日期： {{date | ago}}</span>
                 <span>作者： <a :href="'#/user/' + author">{{author}}</a></span>
-                <a class="btn-collect" href="javascript:;" v-if="!isCollected" @click="collectTopic()">收藏本帖</a>
-                <a class="btn-collect on" href="javascript:;" v-if="isCollected" @click="decollectTopic()">取消收藏</a>
+                <a class="btn-collect" href="javascript:;" v-if="!isCollected" @click="collectTopic">收藏本帖</a>
+                <a class="btn-collect on" href="javascript:;" v-if="isCollected" @click="decollectTopic">取消收藏</a>
             </div>
             <div class="topic-level1" v-html="content"></div>
             <div class="topic-level-split"></div>
@@ -15,26 +15,32 @@
                 <li v-for="(reply, index) in replyList" :key="reply.id">
                     <div class="topic-level-top clearfix">
                         <a class="user-name" :href="'#/user/' + reply.author">{{reply.author}}</a>
+                        <span class="tag-author" v-if="reply.author === author">[作者]</span>
                         <span class="level-num">{{index + 1}}楼</span>
                         <span class="date">发布于：{{reply.date | ago}}</span>
-                        <i class="fa fa-reply" aria-hidden="true" title="回复" @click="replyLevel(reply)"></i>
+                        <i class="fa fa-reply" aria-hidden="true" title="回复" @click="beforeReplyLevel(reply)"></i>
                         <span
                             :class="['like', reply.is_uped ? 'on' : '']"
                             :title="reply.is_uped ? '取消点赞' : '点赞'"
                             @click="switchLike(reply)"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i>{{reply.upnum}}</span>
                     </div>
                     <div class="topic-main" v-html="reply.content"></div>
-                    <editor :title="'回复' + reply.author" type="reply" v-if="reply.showEditor"/>
+                    <editor
+                        :title="'回复' + reply.author"
+                        :reply="reply"
+                        type="replyLevel"
+                        v-if="reply.showEditor"
+                        @post="replyLevel"/>
                 </li>
             </ul>
-            <editor title="回复帖子" type="post"/>
+            <editor title="回复帖子" type="reply" @post="replyTopic"/>
         </div>
     </main>
 </template>
 
 <script>
     import { mapState } from 'vuex';
-    import { getTopicDetail, collectTopic, decollectTopic, upReply } from '@/service';
+    import { getTopicDetail, collectTopic, decollectTopic, upReply, createReply } from '@/service';
     import { ago } from '@/filter';
     import Editor from '@/components/Editor';
     
@@ -71,8 +77,32 @@
                     })
                 }
             },
+            render() {
+                this.topic_id = this.$route.params.id;
+                getTopicDetail(this.token, this.topic_id)
+                .then(res => {
+                    var data = res.data.data;
+                    this.author = data.author.loginname;
+                    this.title = data.title;
+                    this.date = data.create_at;
+                    this.content = data.content;
+                    this.isCollected = data.is_collect;
+                    this.replyCount = data.replies.length;
+                    this.replyList = data.replies.map(item => {
+                        return {
+                            id: item.id,
+                            author: item.author.loginname,
+                            date: item.create_at,
+                            content: item.content.replace(/\/user/g, '#/user'),
+                            is_uped: item.is_uped,
+                            upnum: item.ups.length,
+                            showEditor: false
+                        };
+                    });
+                });
+            },
             collectTopic() {
-                checkLogin();
+                this.checkLogin();
                 collectTopic(this.token, this.topic_id)
                 .then(res => {
                     this.isCollected = true;
@@ -91,33 +121,29 @@
                     reply.is_uped = !reply.is_uped;
                 });
             },
-            replyLevel(reply) {
-                reply.showEditor = true;
+            beforeReplyLevel(reply) {
+                reply.showEditor = !reply.showEditor;
+            },
+            replyTopic(option) {
+                var ctx = this;
+                createReply({
+                    topic_id: ctx.topic_id,
+                    accesstoken: ctx.token,
+                    content: option.content
+                });
+            },
+            replyLevel(option) {
+                var ctx = this;
+                createReply({
+                    topic_id: ctx.topic_id,
+                    accesstoken: ctx.token,
+                    content: `<a href="#/user/${option.reply.author}">@${option.reply.author}</a> ` + option.content,
+                    reply_id: option.reply.id
+                });
             }
         },
         created() {
-            this.topic_id = this.$route.params.id;
-            getTopicDetail(this.token, this.topic_id)
-            .then(res => {
-                var data = res.data.data;
-                this.author = data.author.loginname;
-                this.title = data.title;
-                this.date = data.create_at;
-                this.content = data.content;
-                this.isCollected = data.is_collect;
-                this.replyCount = data.replies.length;
-                this.replyList = data.replies.map(item => {
-                    return {
-                        id: item.id,
-                        author: item.author.loginname,
-                        date: item.create_at,
-                        content: item.content.replace(/\/user/g, '#/user'),
-                        is_uped: item.is_uped,
-                        upnum: item.ups.length,
-                        showEditor: false
-                    };
-                });
-            });
+            this.render();
         }
     };
 </script>
@@ -143,6 +169,13 @@
                     color: #666;
                 }
             }
+        }
+        .tag-author {
+            float: left;
+            color: #666;
+            margin-left: 5px;
+            position: relative;
+            top: 1px;
         }
         .btn-collect {
             float: right;

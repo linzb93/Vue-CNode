@@ -30,7 +30,12 @@
             markAllMsgRead() {},
             markOneMsgRead() {}
         },
-        created() {}
+        created() {
+            getAllMsg(this.token)
+            .then(res => {
+                console.log(res.data);
+            });
+        }
     }
 </script>
 
