@@ -12,19 +12,20 @@
             :value="item.id" />
         </el-select>
         <el-input v-if="type === 'post'" placeholder="标题长度不少于10个字" v-model="titleValue"/>
-        <vue-editor v-model="content"></vue-editor>
+        <markdown-editor v-model="content" :configs="configs"></markdown-editor>
         <el-button type="primary" @click="post">提交</el-button>
     </div>
 </template>
 
 <script>
-    import { VueEditor } from 'vue2-editor';
+    import MarkdownEditor from 'vue-simplemde/src/markdown-editor';
     import { mapState } from 'vuex';
+    import simpleMDE from 'simplemde';
 
     export default {
         name: 'Editor',
         components: {
-            VueEditor
+            MarkdownEditor
         },
         props: {
             title: {
@@ -46,7 +47,11 @@
             return {
                 selectValue: '',
                 titleValue: '',
-                content: ''
+                content: '',
+                configs: {
+                    status: false, // 禁用底部状态栏
+                    spellChecker: false // 禁用拼写检查
+                }
             }
         },
         computed: {
@@ -76,6 +81,7 @@
                     content: ctx.content,
                     reply: ctx.reply
                 });
+                this.content = '';
             }
         }
     }
@@ -83,7 +89,14 @@
 
 <style lang="scss">
     @import "../style/assist/variable";
+    @import '~simplemde/dist/simplemde.min.css';
     
+    .CodeMirror .cm-spell-error:not(.cm-url):not(.cm-comment):not(.cm-tag):not(.cm-word) {
+        background: none;
+    }
+    .markdown-editor {
+        margin-top: 15px;
+    }
     .editor-container {
         margin-top: 10px;
         padding-bottom: 15px;
@@ -91,20 +104,15 @@
             font-size: 20px;
             font-weight: bold;
         }
-        #quill-container {
-            font-size: 14px;
-            .ql-editor a {
-                text-decoration: none;
-                color: $linkColor;
-            }
+        .CodeMirror {
+            min-height: 0;
+            height: 400px;
+            font-size: 14px; 
         }
         .el-select {
             margin-top: 15px;
         }
         .el-input {
-            margin-top: 15px;
-        }
-        .quillWrapper {
             margin-top: 15px;
         }
         .el-button {
@@ -115,7 +123,7 @@
         margin: 10px 30px 0;
     }
     .reply-editor-container {
-        #quill-container {
+        .CodeMirror {
             height: 200px;
         }
     }

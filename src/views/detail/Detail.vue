@@ -30,7 +30,7 @@
                         :reply="reply"
                         type="replyLevel"
                         v-if="reply.showEditor"
-                        @post="replyLevel"/>
+                        @post="replyTopic"/>
                 </li>
             </ul>
             <editor title="回复帖子" type="reply" @post="replyTopic"/>
@@ -126,19 +126,21 @@
             },
             replyTopic(option) {
                 var ctx = this;
+                var content = option.reply.id ? `@${option.reply.author} ${option.content}` : option.content;
                 createReply({
                     topic_id: ctx.topic_id,
                     accesstoken: ctx.token,
-                    content: option.content
-                });
-            },
-            replyLevel(option) {
-                var ctx = this;
-                createReply({
-                    topic_id: ctx.topic_id,
-                    accesstoken: ctx.token,
-                    content: `<a href="#/user/${option.reply.author}">@${option.reply.author}</a> ` + option.content,
+                    content,
                     reply_id: option.reply.id
+                })
+                .then(res => {
+                    this.$message({
+                        type: 'success',
+                        message: '回复成功！',
+                        onClose() {
+                            ctx.render();
+                        }
+                    })
                 });
             }
         },
