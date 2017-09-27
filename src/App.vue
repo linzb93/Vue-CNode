@@ -15,10 +15,10 @@
         beforeCreate() {
             if (ls.store('token')) {
                 var token = ls.store('token');
+                this.$store.commit('SAVE_TOKEN', token);
                 tokenValidate(token)
                 .then(res => {
                     var data = res.data;
-                    this.$store.commit('SAVE_TOKEN', token);
                     this.$store.commit('SAVE_INFO', {
                         name: data.loginname,
                         id: data.id,

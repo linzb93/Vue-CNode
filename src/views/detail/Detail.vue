@@ -5,6 +5,9 @@
             <div class="topic-info clearfix">
                 <span>发帖日期： {{date | ago}}</span>
                 <span>作者： <a :href="'#/user/' + author">{{author}}</a></span>
+                <a class="btn-update-topic" href="javascript:;" v-if="!!token" title="编辑">
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                </a>
                 <a class="btn-collect" href="javascript:;" v-if="!isCollected" @click="collectTopic">收藏本帖</a>
                 <a class="btn-collect on" href="javascript:;" v-if="isCollected" @click="decollectTopic">取消收藏</a>
             </div>
@@ -67,6 +70,7 @@
         methods: {
             checkLogin() {
                 var ctx = this;
+                
                 if (!this.token) {
                     this.$message({
                         type: 'error',
@@ -144,7 +148,7 @@
                 });
             }
         },
-        created() {
+        mounted() {
             this.render();
         }
     };
@@ -170,6 +174,9 @@
                 a {
                     color: #666;
                 }
+            }
+            .fa-pencil-square-o {
+                color: #666;
             }
         }
         .tag-author {
@@ -262,6 +269,29 @@
                 p {
                     margin-bottom: 0;
                 }
+            }
+            table {
+                padding: 0;
+                border-collapse: collapse;
+                border-spacing: 0;
+                font: inherit;
+                max-width: 100%;
+                margin-bottom: 15px;
+            }
+            tr {
+                border-top: 1px solid #ccc;
+                background-color: #fff;
+                margin: 0;
+                padding: 0;
+                &:nth-child(2n) {
+                    background-color: #f8f8f8;
+                }
+            }
+            th, td {
+                border: 1px solid #ccc;
+                text-align: left;
+                margin: 0;
+                padding: 6px 13px;
             }
         }
         .topic-level-split {

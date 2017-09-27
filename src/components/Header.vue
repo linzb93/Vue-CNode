@@ -24,8 +24,6 @@
 <script>
     export default {
         name: 'Header',
-        props: {
-        },
         data() {
             return {
                 nav: [

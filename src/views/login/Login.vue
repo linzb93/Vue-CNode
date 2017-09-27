@@ -2,6 +2,7 @@
     <el-dialog
         title="登录"
         size="tiny"
+        :visible="true"
         @close="cancel">
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
             <el-form-item

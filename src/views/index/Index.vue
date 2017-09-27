@@ -48,7 +48,6 @@
 
 <script>
     import { mapState } from 'vuex';
-    import { ls } from '@/utils/store';
     import { getTopicList, createNewTopic } from '@/service';
     import { shorten, ago } from '@/filter';
     import Pagination from '@/components/Pagination';
