@@ -4,6 +4,7 @@ import CoHeader from '@/components/header';
 import Login from '@/views/login/Login';
 import Index from '@/views/index/Index';
 import Detail from '@/views/detail/Detail';
+import Update from '@/views/detail/Update';
 import User from '@/views/user/User';
 import Message from '@/views/message/Message';
 
@@ -29,6 +30,13 @@ export default new Router({
             components: {
                 header: CoHeader,
                 main: Detail
+            }
+        },
+        {
+            path: '/detail/:id/update',
+            components: {
+                header: CoHeader,
+                main: Update
             }
         },
         {

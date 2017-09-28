@@ -1,6 +1,6 @@
 <template>
     <div :class="['editor-container', containerType]">
-        <h3>{{title}}</h3>
+        <h3>{{header}}</h3>
         <el-select
         v-model="selectValue"
         v-if="type === 'post'"
@@ -12,7 +12,7 @@
             :value="item.id" />
         </el-select>
         <el-input v-if="type === 'post'" placeholder="标题长度不少于10个字" v-model="titleValue"/>
-        <markdown-editor v-model="content" :configs="configs"></markdown-editor>
+        <markdown-editor v-model="eContent" :configs="configs" />
         <el-button type="primary" @click="post">提交</el-button>
     </div>
 </template>
@@ -20,7 +20,6 @@
 <script>
     import MarkdownEditor from 'vue-simplemde/src/markdown-editor';
     import { mapState } from 'vuex';
-    import simpleMDE from 'simplemde';
 
     export default {
         name: 'Editor',
@@ -28,7 +27,7 @@
             MarkdownEditor
         },
         props: {
-            title: {
+            header: {
                 required: true
             },
             type: {
@@ -41,13 +40,29 @@
                 default() {
                     return {};
                 }
-            }
+            },
+            title: {
+                default() {
+                    return '';
+                }
+            },
+            tab: {
+                default() {
+                    return '';
+                }
+            },
+            content: {
+                default() {
+                    return '';
+                }
+            },
+            load: {},
         },
         data() {
             return {
                 selectValue: '',
                 titleValue: '',
-                content: '',
+                eContent: '',
                 configs: {
                     status: false, // 禁用底部状态栏
                     spellChecker: false // 禁用拼写检查
@@ -65,10 +80,17 @@
                 return '';
             }
         },
+        watch: {
+            load() {
+                this.titleValue = this.title;
+                this.selectValue = this.tab;
+                this.eContent = this.content;
+            }
+        },
         methods: {
             post() {
                 var ctx = this;
-                if (this.content === '') {
+                if (this.eContent === '') {
                     this.$message({
                         type: 'error',
                         message: '内容不能为空'
@@ -78,10 +100,10 @@
                 this.$emit('post', {
                     title: ctx.titleValue,
                     tab: ctx.selectValue,
-                    content: ctx.content,
+                    content: ctx.eContent,
                     reply: ctx.reply
                 });
-                this.content = '';
+                this.eContent = '';
             }
         }
     }

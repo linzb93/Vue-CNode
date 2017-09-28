@@ -5,7 +5,7 @@
             <div class="topic-info clearfix">
                 <span>发帖日期： {{date | ago}}</span>
                 <span>作者： <a :href="'#/user/' + author">{{author}}</a></span>
-                <a class="btn-update-topic" href="javascript:;" v-if="!!token" title="编辑">
+                <a class="btn-update-topic" :href="'#/detail/' + topic_id + '/update'" v-if="isMyTopic" title="编辑">
                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                 </a>
                 <a class="btn-collect" href="javascript:;" v-if="!isCollected" @click="collectTopic">收藏本帖</a>
@@ -29,14 +29,14 @@
                     </div>
                     <div class="topic-main" v-html="reply.content"></div>
                     <editor
-                        :title="'回复' + reply.author"
+                        :header="'回复' + reply.author"
                         :reply="reply"
                         type="replyLevel"
                         v-if="reply.showEditor"
                         @post="replyTopic"/>
                 </li>
             </ul>
-            <editor title="回复帖子" type="reply" @post="replyTopic"/>
+            <editor header="回复帖子" type="reply" @post="replyTopic"/>
         </div>
     </main>
 </template>
@@ -65,7 +65,10 @@
             Editor
         },
         computed: {
-            ...mapState(['token'])
+            ...mapState(['token']),
+            isMyTopic() {
+                return this.author === this.$store.state.userInfo.name;
+            }
         },
         methods: {
             checkLogin() {
@@ -144,7 +147,7 @@
                         onClose() {
                             ctx.render();
                         }
-                    })
+                    });
                 });
             }
         },
@@ -159,6 +162,9 @@
 
     .detail-container {
         padding: 1px 30px;
+        & > h1 {
+            padding-bottom: 30px;
+        }
         h1 {
             font-size: 24px;
             color: #333;

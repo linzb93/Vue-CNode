@@ -39,7 +39,7 @@
             v-show="!showEmptyTips" />
             <empty-tips v-show="showEmptyTips" />
             <editor
-                title="发布新帖"
+                header="发布新帖"
                 type="post" 
                 @post="postTopic"/>
         </div>
