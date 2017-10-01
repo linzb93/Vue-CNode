@@ -1,13 +1,20 @@
 <template>
     <div class="empty-tips">
-        <img src="@/assets/images/" alt="">
-        <p>暂无内容</p>
+        <img src="../assets/images/list_empty.png" alt="">
+        <p>{{title}}</p>
     </div>
 </template>
 
 <script>
     export default {
-        name: 'EmptyTips'
+        name: 'EmptyTips',
+        props: {
+            title: {
+                default() {
+                    return '暂无内容';
+                }
+            }
+        }
     };
 </script>
 
@@ -17,8 +24,8 @@
         padding-top: 20px;
         p {
             color: #666;
-            font-size: 14px;
-            margin-top: 14px;
+            font-size: 18px;
+            margin-top: 16px;
         }
     }
 </style>

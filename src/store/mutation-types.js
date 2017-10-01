@@ -1,3 +1,4 @@
 export var SAVE_TOKEN = 'SAVE_TOKEN';
 export var SAVE_INFO = 'SAVE_INFO';
 export var LOGOUT = 'LOGOUT';
+export var TOGGLE_UNREAD_MSG_STATE = 'TOGGLE_UNREAD_MSG_STATE';

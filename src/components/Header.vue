@@ -2,12 +2,14 @@
     <header>
         <div class="wrapper clearfix">
             <h1 class="logo">
-                <a href="/">
+                <a href="#/">
                     <img src="https://o4j806krb.qnssl.com/public/images/cnodejs_light.svg" alt="">
                 </a>
             </h1>
             <nav>
-                <a v-for="item in nav" :href="item.url" :key="item.name">{{item.name}}</a>
+                <el-badge v-for="item in nav" :key="item.name":is-dot="item.isDot">
+                    <a :href="item.url">{{item.name}}</a>
+                </el-badge>
             </nav>
             <div class="login-info" v-if="isLogin">
                 <img class="avatar" :src="avatar" alt="">
@@ -22,18 +24,24 @@
 </template>
 
 <script>
+    import { mapState } from 'vuex';
+    import { getUnreadMsgCount } from '@/service';
+
     export default {
         name: 'Header',
         data() {
+            var ctx = this;
             return {
                 nav: [
                     {
                         name: '首页',
-                        url: '#/'
+                        url: '#/',
+                        isDot: false,
                     },
                     {
                         name: '消息',
-                        url: '#/message'
+                        url: '#/message',
+                        isDot: ctx.hasUnreadMsg
                     }
                 ]
             }
@@ -47,12 +55,21 @@
             },
             isLogin() {
                 return !!this.$store.state.token;
-            }
+            },
+            ...mapState(['token', 'hasUnreadMsg'])
         },
         methods: {
             logout() {
                 this.$store.commit('LOGOUT');
             }
+        },
+        created() {
+            getUnreadMsgCount(this.token)
+            .then(res => {
+                if (res.data.data > 0) {
+                    this.$store.commit('TOGGLE_UNREAD_MSG_STATE', true);
+                }
+            });
         }
     };
 </script>

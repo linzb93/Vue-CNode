@@ -27,4 +27,5 @@ export default {
             name: '客户端测试'
         }
     ],
+    hasUnreadMsg: false
 };

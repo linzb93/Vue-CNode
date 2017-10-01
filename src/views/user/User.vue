@@ -43,6 +43,7 @@
 
 <script>
     import { getUserDetail, getUserCollect, decollectTopic } from '@/service';
+    import { mapState } from 'vuex';
     import { ago } from '@/filter';
     import EmptyTips from '@/components/Empty';
 
@@ -62,6 +63,9 @@
                 recent_topics: [],
                 collectList: []
             }
+        },
+        computed: {
+            ...mapState(['token'])
         },
         methods: {
             render() {

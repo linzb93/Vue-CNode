@@ -1,7 +1,8 @@
 import {
     SAVE_TOKEN,
     SAVE_INFO,
-    LOGOUT
+    LOGOUT,
+    TOGGLE_UNREAD_MSG_STATE
 } from './mutation-types';
 import { ls } from '@/utils/store';
 
@@ -20,5 +21,8 @@ export default {
         state.userInfo = {};
         state.token = '';
         ls.remove('token');
+    },
+    [TOGGLE_UNREAD_MSG_STATE] (state, unreadState) {
+        state.hasUnreadMsg = unreadState;
     }
 };
