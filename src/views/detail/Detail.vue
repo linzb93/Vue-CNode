@@ -1,6 +1,6 @@
 <template>
-    <main>
-        <div class="detail-container wrapper">
+    <main v-loading.fullscreen.lock="loading">
+        <div class="detail-container wrapper" v-if="hasDetailPage">
             <h1>{{title}}</h1>
             <div class="topic-info clearfix">
                 <span>发帖日期： {{date | ago}}</span>
@@ -8,8 +8,8 @@
                 <a class="btn-update-topic" :href="'#/detail/' + topic_id + '/update'" v-if="isMyTopic" title="编辑">
                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                 </a>
-                <a class="btn-collect" href="javascript:;" v-if="!isCollected" @click="collectTopic">收藏本帖</a>
-                <a class="btn-collect on" href="javascript:;" v-if="isCollected" @click="decollectTopic">取消收藏</a>
+                <a class="btn-collect" href="javascript:;" v-if="!isCollected" @click="collectThisTopic">收藏本帖</a>
+                <a class="btn-collect on" href="javascript:;" v-if="isCollected" @click="decollectThisTopic">取消收藏</a>
             </div>
             <div class="topic-level1" v-html="content"></div>
             <div class="topic-level-split"></div>
@@ -51,6 +51,8 @@
         name: 'Detail',
         data() {
             return {
+                loading: true,
+                hasDetailPage: false,
                 topic_id: '',
                 title: '',
                 date: '',
@@ -88,6 +90,8 @@
                 this.topic_id = this.$route.params.id;
                 getTopicDetail(this.token, this.topic_id)
                 .then(res => {
+                    this.loading = false;
+                    this.hasDetailPage = true;
                     var data = res.data.data;
                     this.author = data.author.loginname;
                     this.title = data.title;
@@ -106,16 +110,27 @@
                             showEditor: false
                         };
                     });
+                })
+                .catch(error => {
+                    var ctx = this;
+                    this.loading = false;
+                    this.$message({
+                        type: 'error',
+                        message: '帖子不存在！',
+                        onClose() {
+                            ctx.$router.push('/#');
+                        }
+                    });
                 });
             },
-            collectTopic() {
+            collectThisTopic() {
                 this.checkLogin();
                 collectTopic(this.token, this.topic_id)
                 .then(res => {
                     this.isCollected = true;
                 });
             },
-            decollectTopic() {
+            decollectThisTopic() {
                 decollectTopic(this.token, this.topic_id)
                 .then(res => {
                     this.isCollected = false;
@@ -151,7 +166,7 @@
                 });
             }
         },
-        mounted() {
+        created() {
             this.render();
         }
     };

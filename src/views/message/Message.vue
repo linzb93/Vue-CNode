@@ -23,7 +23,7 @@
                     <li v-for="msg in read_msg_list" :key="msg.id">
                         <a :href="'#/user/' + msg.author">@{{msg.author}}</a>
                         <span>回复了您的帖子</span>
-                        <a :href="'#/detail' + msg.topicId">{{msg.title}}</a>
+                        <a :href="'#/detail/' + msg.topicId">{{msg.title}}</a>
                     </li>
                 </ul>
                 <empty-tips title="暂无已读消息" v-if="read_msg_list.length === 0" />
@@ -95,9 +95,11 @@
         created() {
             this.render();
         },
-        beforeRouteUpdate(to, from, next) {
-            this.render();
-            next();
+        beforeRouteEnter(to, from, next) {
+            next(vm => {
+                console.log(1)
+                vm.render();
+            });
         }
     }
 </script>

@@ -15,6 +15,7 @@
                 <img class="avatar" :src="avatar" alt="">
                 <span class="username">{{username}}</span>
                 <div class="user-popup">
+                    <a :href="'#/user/' + username">个人中心</a>
                     <a @click="logout" href="javascript:;">退出</a>
                 </div>
             </div>
@@ -155,9 +156,9 @@
             display: none;
             position: absolute;
             text-align: center;
-            left: 0;
+            left: -10px;
             top: 30px;
-            width: 60px;
+            width: 80px;
             border-radius: 2px;
             background: #fff;
             a {

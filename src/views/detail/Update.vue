@@ -7,7 +7,7 @@
         :tab="tab"
         :load="loaded"
         :content="content"
-        @post="updateTopic"/>
+        @post="updateThisTopic"/>
     </div>
 </template>
 
@@ -47,7 +47,7 @@
                     this.content = toMarkDown(con);
                 });
             },
-            updateTopic(option) {
+            updateThisTopic(option) {
                 var ctx = this;
                 updateTopic({
                     accesstoken: ctx.token,

@@ -1,6 +1,10 @@
 export default {
     token: '',
-    userInfo: {},
+    userInfo: {
+        name: '',
+        id: '',
+        avatar: ''
+    },
     tabs: [
         {
             id: 'all',

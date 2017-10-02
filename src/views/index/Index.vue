@@ -74,7 +74,7 @@
             ...mapState(['tabs', 'token'])
         },
         methods: {
-            getTopicList(tab = '', page = 1) {
+            render(tab = '', page = 1) {
                 getTopicList(tab, page)
                 .then(res => {
                     if (res.data.data.length === 0) {
@@ -113,10 +113,10 @@
                 });
                 this.tabId = id;
                 this.changeTab = !this.changeTab;
-                this.getTopicList(id);
+                this.render(id);
             },
             changePage(curPage) {
-                this.getTopicList(this.tabId, curPage);
+                this.render(this.tabId, curPage);
             },
             postTopic({title, tab, content}) {
                 var ctx = this;
@@ -137,7 +137,7 @@
             }
         },
         created() {
-            this.getTopicList();
+            this.render();
             this.tabInit();
         }
     };

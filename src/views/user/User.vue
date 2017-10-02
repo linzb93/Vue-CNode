@@ -1,6 +1,9 @@
 <template>
     <main>
-        <div class="user-container wrapper clearfix">
+        <div
+            class="user-container wrapper clearfix"
+            v-if="hasUser"
+            v-loading.fullscreen.lock="loading">
             <div class="user-sidebar">
                 <p class="text-center"><img :src="avatar" alt=""></p>
                 <p>昵称：{{name}}</p>
@@ -11,30 +14,33 @@
             <div class="user-main">
                 <div class="topic-block">
                     <h2>最近创建的话题</h2>
-                    <ul>
+                    <ul v-if="recent_topics.length > 0">
                         <li v-for="topic in recent_topics" :key="topic.id">
                             <h3><a :href="'#/detail/' + topic.id">{{topic.title}}</a></h3>
                             <span class="date">{{topic.last_reply_at | ago}}</span>
                         </li>
                     </ul>
+                    <empty-tips v-else />
                 </div>
                 <div class="topic-block">
                     <h2>最近回复的话题</h2>
-                    <ul>
+                    <ul v-if="recent_replies.length > 0">
                         <li v-for="reply in recent_replies" :key="reply.id">
                             <h3><a :href="'#/detail/' + reply.id">{{reply.title}}</a></h3>
                             <span class="date">{{reply.last_reply_at | ago}}</span>
                         </li>
                     </ul>
+                    <empty-tips v-else />                    
                 </div>
-                <div class="topic-block" v-if="token">
+                <div class="topic-block" v-if="isLoginUser">
                     <h2>我收藏的话题</h2>
-                    <ul>
+                    <ul v-if="collectList.length > 0">
                         <li v-for="(item, index) in collectList" :key="item.id">
-                            <h3><a :href="'#/detail/' + reply.id">{{reply.title}}</a></h3>
-                            <a class="btn-decollect" href="javascript:;" @click="decollect(item.id, index)">取消收藏</a>
+                            <h3><a :href="'#/detail/' + item.id">{{item.title}}</a></h3>
+                            <el-button class="btn-collect" type="primary" @click="decollect(item.id, index)">取消收藏</el-button>
                         </li>
                     </ul>
+                    <empty-tips v-else />
                 </div>
             </div>
         </div>
@@ -54,6 +60,8 @@
         },
         data() {
             return {
+                loading: true,
+                hasUser: false,
                 avatar: '',
                 name: '',
                 create_at: '',
@@ -65,7 +73,10 @@
             }
         },
         computed: {
-            ...mapState(['token'])
+            ...mapState(['token']),
+            isLoginUser() {
+                return this.name === this.$store.state.userInfo.name;
+            }
         },
         methods: {
             render() {
@@ -73,6 +84,8 @@
                 getUserDetail(userId)
                 .then(res => {
                     var data = res.data.data;
+                    this.loading = false;
+                    this.hasUser = true;
                     this.avatar = data.avatar_url;
                     this.name = data.loginname;
                     this.score = data.score;
@@ -92,16 +105,26 @@
                         last_reply_at,
                         title
                     }));
+                }).catch(error => {
+                    var ctx = this;
+                    this.loading = false;
+                    this.$message({
+                        type: 'error',
+                        message: '用户不存在！',
+                        onClose() {
+                            ctx.$router.push('/#');
+                        }
+                    });
                 });
 
                 if (this.token) {
                     getUserCollect(userId)
                     .then(res => {
                         var data = res.data.data;
-                        this.collectList = data.map(({id, title}) => {
+                        this.collectList = data.map(({id, title}) => ({
                             id,
                             title
-                        });
+                        }))
                     });
                 }
             },
@@ -169,6 +192,7 @@
             margin-bottom: 12px;
             position: relative;
             font-size: 16px;
+            line-height: 36px;
         }
         h3 {
             padding-right: 70px;
@@ -179,6 +203,11 @@
             top: 2px;
             font-size: 12px;
             color: #999;
+        }
+        .btn-collect {
+            position: absolute;
+            right: 0;
+            top: 0;
         }
     }
 </style>
