@@ -48,6 +48,7 @@
 
 <script>
     import { mapState } from 'vuex';
+    import cloneDeep from 'lodash/cloneDeep';
     import { getTopicList, createNewTopic } from '@/service';
     import { shorten, ago } from '@/filter';
     import Pagination from '@/components/Pagination';
@@ -63,7 +64,6 @@
         },
         data() {
             return {
-                tabId: 'all',
                 topics: [],
                 showEmptyTips: false, //无内容返回时显示
                 changeTab: false, //分页重置的标志
@@ -71,7 +71,19 @@
             };
         },
         computed: {
-            ...mapState(['tabs', 'token'])
+            ...mapState(['token']),
+            tabs: {
+                get() {
+                    return cloneDeep(this.$store.state.tabs);
+                },
+                set() {}
+            },
+            tabId() {
+                return this.$store.state.index.tabId
+            },
+            page() {
+                return this.$store.state.index.page;
+            }
         },
         methods: {
             render(tab = '', page = 1) {
@@ -103,7 +115,7 @@
             tabInit() {
                 //标签初始化
                 this.tabs.forEach((item, index) => {
-                    this.$set(item, 'active', index === 0 ? 'on' : '');
+                    this.$set(item, 'active', item.id === this.tabId ? 'on' : '');
                 });
             },
             tabSwitch(id, tabIndex) {
@@ -111,11 +123,13 @@
                 this.tabs.forEach((item, index) => {
                     this.$set(item, 'active', index === tabIndex ? 'on' : '');
                 });
-                this.tabId = id;
+                this.$store.commit('tabSwitch', id);
+                this.$store.commit('changePage', 1);
                 this.changeTab = !this.changeTab;
                 this.render(id);
             },
             changePage(curPage) {
+                this.$store.commit('changePage', curPage);
                 this.render(this.tabId, curPage);
             },
             postTopic({title, tab, content}) {
@@ -137,7 +151,7 @@
             }
         },
         created() {
-            this.render();
+            this.render(this.tabId, this.page);
             this.tabInit();
         }
     };

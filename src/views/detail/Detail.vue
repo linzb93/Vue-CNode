@@ -15,7 +15,7 @@
             <div class="topic-level-split"></div>
             <p class="reply-count">共<span>{{replyCount}}</span>条回复</p>
             <ul class="topic-level-list">
-                <li v-for="(reply, index) in replyList" :key="reply.id">
+                <li v-for="(reply, index) in showReplyList" :key="reply.id">
                     <div class="topic-level-top clearfix">
                         <a class="user-name" :href="'#/user/' + reply.author">{{reply.author}}</a>
                         <span class="tag-author" v-if="reply.author === author">[作者]</span>
@@ -36,6 +36,7 @@
                         @post="replyTopic"/>
                 </li>
             </ul>
+            <div class="load-more" @click="loadMore" v-show="!loadAllReplies">加载更多</div>
             <editor header="回复帖子" type="reply" @post="replyTopic"/>
         </div>
     </main>
@@ -60,7 +61,9 @@
                 content: '',
                 isCollected: false,
                 replyCount: 0,
-                replyList: []
+                replyList: [],
+                loadReplyPage: 1,
+                showReplyList: []
             }
         },
         components: {
@@ -70,6 +73,9 @@
             ...mapState(['token']),
             isMyTopic() {
                 return this.author === this.$store.state.userInfo.name;
+            },
+            loadAllReplies() {
+                return this.replyList.length === this.showReplyList.length;
             }
         },
         methods: {
@@ -110,6 +116,7 @@
                             showEditor: false
                         };
                     });
+                    this.showReplyList = this.replyList.filter((item, index) => index < 10);
                 })
                 .catch(error => {
                     var ctx = this;
@@ -135,6 +142,10 @@
                 .then(res => {
                     this.isCollected = false;
                 });
+            },
+            loadMore() {
+                this.loadReplyPage++;
+                this.showReplyList = this.replyList.filter((item, index) => index < (this.loadReplyPage * 10));
             },
             switchLike(reply) {
                 upReply(this.token, reply.id)
@@ -390,6 +401,20 @@
             padding: 15px 0;
             h3 {
                 margin-bottom: 8px;
+            }
+        }
+        .load-more {
+            cursor: pointer;
+            width: 200px;
+            height: 40px;
+            border: $border;
+            font-size: 16px;
+            text-align: center;
+            color: #333;
+            line-height: 40px;
+            margin: 0 auto 10px;
+            &:hover {
+                background: #e0e0e0;
             }
         }
     }

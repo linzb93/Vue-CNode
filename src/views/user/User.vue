@@ -4,45 +4,51 @@
             class="user-container wrapper clearfix"
             v-if="hasUser"
             v-loading.fullscreen.lock="loading">
-            <div class="user-sidebar">
-                <p class="text-center"><img :src="avatar" alt=""></p>
-                <p>昵称：{{name}}</p>
-                <p>积分：{{score}}</p>
-                <p><i class="fa fa-github"></i> <a :href="'https:www.github.com/' + githubName" target="_blank">@{{githubName}}</a></p>
-                <p>注册时间：{{create_at | ago}}</p>
-            </div>
-            <div class="user-main">
-                <div class="topic-block">
-                    <h2>最近创建的话题</h2>
-                    <ul v-if="recent_topics.length > 0">
-                        <li v-for="topic in recent_topics" :key="topic.id">
-                            <h3><a :href="'#/detail/' + topic.id">{{topic.title}}</a></h3>
-                            <span class="date">{{topic.last_reply_at | ago}}</span>
-                        </li>
-                    </ul>
-                    <empty-tips v-else />
-                </div>
-                <div class="topic-block">
-                    <h2>最近回复的话题</h2>
-                    <ul v-if="recent_replies.length > 0">
-                        <li v-for="reply in recent_replies" :key="reply.id">
-                            <h3><a :href="'#/detail/' + reply.id">{{reply.title}}</a></h3>
-                            <span class="date">{{reply.last_reply_at | ago}}</span>
-                        </li>
-                    </ul>
-                    <empty-tips v-else />                    
-                </div>
-                <div class="topic-block" v-if="isLoginUser">
-                    <h2>我收藏的话题</h2>
-                    <ul v-if="collectList.length > 0">
-                        <li v-for="(item, index) in collectList" :key="item.id">
-                            <h3><a :href="'#/detail/' + item.id">{{item.title}}</a></h3>
-                            <el-button class="btn-collect" type="primary" @click="decollect(item.id, index)">取消收藏</el-button>
-                        </li>
-                    </ul>
-                    <empty-tips v-else />
-                </div>
-            </div>
+            <el-row :gutter="30">
+                <el-col :span="6">
+                    <div class="user-sidebar">
+                        <p class="text-center"><img :src="avatar" alt=""></p>
+                        <p>昵称：{{name}}</p>
+                        <p>积分：{{score}}</p>
+                        <p><i class="fa fa-github"></i> <a :href="'https:www.github.com/' + githubName" target="_blank">@{{githubName}}</a></p>
+                        <p>注册时间：{{create_at | ago}}</p>
+                    </div>
+                </el-col>
+                <el-col :span="18">
+                    <div class="user-main">
+                        <div class="topic-block">
+                            <h2>最近创建的话题</h2>
+                            <ul v-if="recent_topics.length > 0">
+                                <li v-for="topic in recent_topics" :key="topic.id">
+                                    <h3><a :href="'#/detail/' + topic.id">{{topic.title}}</a></h3>
+                                    <span class="date">{{topic.last_reply_at | ago}}</span>
+                                </li>
+                            </ul>
+                            <empty-tips v-else />
+                        </div>
+                        <div class="topic-block">
+                            <h2>最近回复的话题</h2>
+                            <ul v-if="recent_replies.length > 0">
+                                <li v-for="reply in recent_replies" :key="reply.id">
+                                    <h3><a :href="'#/detail/' + reply.id">{{reply.title}}</a></h3>
+                                    <span class="date">{{reply.last_reply_at | ago}}</span>
+                                </li>
+                            </ul>
+                            <empty-tips v-else />                    
+                        </div>
+                        <div class="topic-block" v-if="isLoginUser">
+                            <h2>我收藏的话题</h2>
+                            <ul v-if="collectList.length > 0">
+                                <li v-for="(item, index) in collectList" :key="item.id">
+                                    <h3><a :href="'#/detail/' + item.id">{{item.title}}</a></h3>
+                                    <el-button class="btn-collect" type="primary" @click="decollect(item.id, index)">取消收藏</el-button>
+                                </li>
+                            </ul>
+                            <empty-tips v-else />
+                        </div>
+                    </div>
+                </el-col>
+            </el-row>
         </div>
     </main>
 </template>
@@ -79,8 +85,8 @@
             }
         },
         methods: {
-            render() {
-                var userId = this.$route.params.id;
+            render(toUserId) {
+                var userId = toUserId || this.$route.params.id;
                 getUserDetail(userId)
                 .then(res => {
                     var data = res.data.data;
@@ -137,11 +143,18 @@
         },
         created() {
             this.render();
+        },
+        beforeRouteUpdate(to, from, next) {
+            var toUserId = to.params.id || '';
+            this.render(toUserId);
+            next();
         }
     }
 </script>
 
 <style lang="scss">
+    @import "../../style/assist/mixin";
+
     main .user-container {
         background: none;
         a {
@@ -152,8 +165,6 @@
         }
     }
     .user-sidebar {
-        float: left;
-        width: 300px;
         padding: 30px 0;
         background: #fff;
         img {
@@ -162,7 +173,7 @@
             margin-bottom: 20px;
         }
         p {
-            padding: 10px;
+            padding: 10px 15px;
             color: #333;
         }
         .fa-github {
@@ -175,8 +186,6 @@
         }
     }
     .user-main {
-        float: right;
-        width: 830px;
         padding: 0 25px 30px;
         background: #fff;
         .topic-block {
@@ -195,7 +204,8 @@
             line-height: 36px;
         }
         h3 {
-            padding-right: 70px;
+            @include ellipse;
+            padding-right: 110px;
         }
         .date {
             position: absolute;

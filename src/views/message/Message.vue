@@ -94,12 +94,6 @@
         },
         created() {
             this.render();
-        },
-        beforeRouteEnter(to, from, next) {
-            next(vm => {
-                console.log(1)
-                vm.render();
-            });
         }
     }
 </script>
