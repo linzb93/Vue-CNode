@@ -1,6 +1,6 @@
 <template>
     <main>
-        <div class="message-main wrapper">
+        <div class="message-main wrapper" v-if="!!token">
             <div class="message-block">
                 <div class="clearfix">
                     <h3>未读消息</h3>
@@ -89,11 +89,27 @@
             markThisMsgRead(msg) {
                 markOneMsgRead(this.token, msg.id);
                 this.unread_length--;
-                this.$router.push(`#/detail/${msg.topicId}`);
+                this.$router.push(`/detail/${msg.topicId}`);
             }
         },
         created() {
+            var ctx = this;
+            if (!ctx.token) {
+                ctx.$message({
+                    type: 'warning',
+                    message: '请先登录',
+                    onClose() {
+                        ctx.$router.push('/login');
+                    }
+                });
+                return;
+            }
             this.render();
+        },
+        beforeRouteEnter(to, from, next) {
+            next(vm => {
+                
+            })
         }
     }
 </script>

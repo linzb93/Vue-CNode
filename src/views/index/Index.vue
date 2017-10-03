@@ -181,7 +181,7 @@
     }
     .index-list {
         li {
-            padding: 10px;
+            padding: 10px 30px;
             &:hover {
                 background: #f5f5f5;
             }
@@ -216,7 +216,7 @@
             float: left;
             vertical-align: top;
             font-size: 16px;
-            max-width: 600px;
+            max-width: 700px;
             margin-right: 10px;
             a {
                 color: #333;

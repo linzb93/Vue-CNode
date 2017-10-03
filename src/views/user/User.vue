@@ -118,7 +118,7 @@
                         type: 'error',
                         message: '用户不存在！',
                         onClose() {
-                            ctx.$router.push('/#');
+                            ctx.$router.push('/');
                         }
                     });
                 });

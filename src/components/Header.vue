@@ -19,7 +19,7 @@
                     <a @click="logout" href="javascript:;">退出</a>
                 </div>
             </div>
-            <a class="btn-login" href="#/login" v-if="!isLogin">登录</a>
+            <a class="btn-login" href="#/login" v-else>登录</a>
         </div>
     </header>
 </template>
@@ -65,12 +65,14 @@
             }
         },
         created() {
-            getUnreadMsgCount(this.token)
-            .then(res => {
-                if (res.data.data > 0) {
-                    this.$store.commit('TOGGLE_UNREAD_MSG_STATE', true);
-                }
-            });
+            if (this.isLogin) {
+                getUnreadMsgCount(this.token)
+                .then(res => {
+                    if (res.data.data > 0) {
+                        this.$store.commit('TOGGLE_UNREAD_MSG_STATE', true);
+                    }
+                });
+            }
         }
     };
 </script>

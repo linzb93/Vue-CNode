@@ -1,19 +1,22 @@
 <template>
     <div :class="['editor-container', containerType]">
         <h3>{{header}}</h3>
-        <el-select
-        v-model="selectValue"
-        v-if="type === 'post'"
-         placeholder="请选择">
-            <el-option
-            v-for="item in tabs"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id" />
-        </el-select>
-        <el-input v-if="type === 'post'" placeholder="标题长度不少于10个字" v-model="titleValue"/>
-        <markdown-editor v-model="eContent" :configs="configs" />
-        <el-button type="primary" @click="post">提交</el-button>
+        <div v-if="isLogin">
+            <el-select
+            v-model="selectValue"
+            v-if="type === 'post'"
+            placeholder="请选择">
+                <el-option
+                v-for="item in tabs"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id" />
+            </el-select>
+            <el-input v-if="type === 'post'" placeholder="标题长度不少于10个字" v-model="titleValue"/>
+            <markdown-editor v-model="eContent" :configs="configs" />
+            <el-button type="primary" @click="post">提交</el-button>
+        </div>
+        <p class="not-login-tips" v-else>发帖/回帖之前请先<a href="#/login">登录</a>。</p>
     </div>
 </template>
 
@@ -70,7 +73,7 @@
             }
         },
         computed: {
-            ...mapState(['tabs']),
+            ...mapState(['tabs', 'token']),
             containerType() {
                 if (this.type === 'post') {
                     return 'index-editor-container';
@@ -78,6 +81,9 @@
                     return 'reply-editor-container';
                 }
                 return '';
+            },
+            isLogin() {
+                return !!this.token;
             }
         },
         watch: {
@@ -131,6 +137,12 @@
             height: 400px;
             font-size: 14px; 
         }
+        .not-login-tips {
+            padding-top: 10px;
+            a {
+                color: $linkColor;
+            }
+        }
         .el-select {
             margin-top: 15px;
         }
@@ -142,7 +154,8 @@
         }
     }
     .index-editor-container {
-        margin: 10px 30px 0;
+        margin: 0 30px;
+        padding-top: 10px;
     }
     .reply-editor-container {
         .CodeMirror {
