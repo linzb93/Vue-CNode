@@ -1,30 +1,32 @@
-# demo
+# Vue—CNode
 
-> A Vue.js project
+Vue—CNode 是我用vue.js实现的cnodejs社区的SPA，感谢[cnodejs](http://www.cnodejs.org)社区提供的API。
 
-## Build Setup
+## 技术栈
 
-``` bash
-# install dependencies
-npm install
+基于 vue2 + vuex + vue-router + element-ui + ES6 + sass 开发，使用 webpack 打包。
 
-# serve with hot reload at localhost:8080
-npm run dev
+## 查看项目
 
-# build for production with minification
-npm run build
+1. 克隆项目： https://github.com/linzb93/Vue-CNode
+2. 安装Node
+3. 安装依赖：在命令行输入 npm install
+4. 启动服务：输入 npm run dev
 
-# build for production and view the bundle analyzer report
-npm run build --report
+## 功能
 
-# run unit tests
-npm run unit
+* 登录
+* 首页列表，帖子分类，分页加载
+* 帖子详情，回复帖子，回复他人的回复，点赞，收藏
+* 编辑主题
+* 个人主页，查看发布与回复过的帖子，登录用户可以查看收藏的主题
+* 消息列表，消息提醒，标记消息为已读
+* 退出登录
+* 退回主页时，数据还原
+* 权限控制
 
-# run e2e tests
-npm run e2e
+## 感想
 
-# run all tests
-npm test
-```
-
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+* 对 Vue 体系更加熟悉了，这是以前做小 demo 学习不到的，例如编辑器，权限控制。
+* 页面退回到首页时能还原数据（ tab 和页码 ），本来是记在 Index 组件里面的，后来发现每次回到首页，这个组件就会重新加载，所以还是放到全局（ vuex ）的 module 里面。
+* 再说下 cnodejs 提供的 API。我认为这些 API 还是不够好，比如首页加载帖子时不知道总数多少，没法用带数字的分页形式，只能保留上一页和下一页的按钮，我想可能是因为这些 API 是给移动端设计的。另外返回的字段名称没有解释，都是靠猜的。帖子的回复是全部加载的，从性能上看就不够好。
