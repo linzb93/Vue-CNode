@@ -163,6 +163,7 @@
             width: 80px;
             border-radius: 2px;
             background: #fff;
+            z-index: 5;
             a {
                 display: block;
                 line-height: 2;

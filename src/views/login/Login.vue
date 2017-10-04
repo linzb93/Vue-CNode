@@ -3,6 +3,7 @@
         title="登录"
         size="tiny"
         :visible="true"
+        :show-close="false"
         @close="cancel">
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
             <el-form-item
@@ -67,11 +68,13 @@
             },
             loginHandle(token, callback) {
                 this.canSubmit = false;
+                setTimeout(() => {
+                    this.canSubmit = true;
+                }, 3000);
                 tokenValidate(token)
                 .then(res => {
                     var data = res.data;
                     var ctx = this;
-                    this.canSubmit = true;
                     this.$store.commit('SAVE_INFO', {
                         name: data.loginname,
                         id: data.id,

@@ -34,10 +34,11 @@
             </ul>
             <pagination
             :isLastPage="isLastPage"
+            :initPage="page"
             @change="changePage"
             v-model="changeTab"
-            v-show="!showEmptyTips" />
-            <empty-tips v-show="showEmptyTips" />
+            v-if="!showEmptyTips" />
+            <empty-tips v-else />
             <editor
                 header="发布新帖"
                 type="post" 
@@ -72,11 +73,16 @@
         },
         computed: {
             ...mapState(['token']),
-            tabs: {
-                get() {
-                    return cloneDeep(this.$store.state.tabs);
-                },
-                set() {}
+            tabs() {
+                var arr = cloneDeep(this.$store.state.tabs);
+                arr.unshift({
+                    id: 'all',
+                    name: '全部'
+                }, {
+                    id: 'good',
+                    name: '精华'
+                });
+                return arr;
             },
             tabId() {
                 return this.$store.state.index.tabId

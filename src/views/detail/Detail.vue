@@ -78,16 +78,19 @@
         },
         computed: {
             ...mapState(['token']),
+            loginname() {
+                return this.$store.state.userInfo.name;
+            },
             isMyTopic() {
-                return this.author === this.$store.state.userInfo.name;
+                return this.author === this.loginname;
             },
             loadAllReplies() {
                 return this.replyList.length === this.showReplyList.length;
             }
         },
         methods: {
-            render() {
-                this.topic_id = this.$route.params.id;
+            render(toTopicId) {
+                this.topic_id = toTopicId || this.$route.params.id;
                 getTopicDetail(this.token, this.topic_id)
                 .then(res => {
                     this.loading = false;
@@ -148,6 +151,13 @@
                     });
                     return;
                 }
+                if (this.loginname === reply.author) {
+                    this.$message({
+                        type: 'error',
+                        message: '不能给自己点赞'
+                    });
+                    return;
+                }
                 upReply(this.token, reply.id)
                 .then(res => {
                     reply.upnum += reply.is_uped ? -1 : 1;
@@ -186,6 +196,11 @@
         },
         created() {
             this.render();
+        },
+        beforeRouteUpdate(to, from, next) {
+            var toTopicId = to.params.id || '';
+            this.render(toTopicId);
+            next();
         }
     };
 </script>
@@ -196,6 +211,9 @@
     .detail-container {
         padding: 1px 30px;
         font-size: 16px;
+        &.wrapper {
+            width: 1140px;
+        }
         & > h1 {
             padding-bottom: 30px;
         }
@@ -234,6 +252,7 @@
             color: #fff;
             text-align: center;
             line-height: 30px;
+            font-size: 14px;
             &.on {
                 background: #999;
                 &:hover {
@@ -302,6 +321,9 @@
             li {
                 margin-left: 18px;
                 list-style-type: disc;
+            }
+            em {
+                font-style: italic;
             }
             blockquote {
                 padding: 3px 15px;

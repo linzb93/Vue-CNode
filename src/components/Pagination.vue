@@ -8,11 +8,16 @@
 <script>
     export default {
         name: 'Pagination',
-        props: ['isLastPage'],
+        props: ['isLastPage', 'initPage', 'value'],
         data() {
             return {
-                curPage: 1,
-                isFirstPage: true
+                isFirstPage: true,
+                curPage: 1
+            }
+        },
+        watch: {
+            value() {
+                this.switchFirst();
             }
         },
         methods: {
@@ -27,6 +32,16 @@
                 this.curPage++;
                 this.isFirstPage = false;
                 this.$emit('change', this.curPage);
+            },
+            switchFirst() {
+                this.curPage = 1;
+                this.isFirstPage = true;
+            }
+        },
+        created() {
+            this.curPage = this.initPage;
+            if (this.initPage > 1) {
+                this.isFirstPage = false;
             }
         }
     };

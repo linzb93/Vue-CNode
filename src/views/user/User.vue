@@ -34,7 +34,7 @@
                                     <span class="date">{{reply.last_reply_at | ago}}</span>
                                 </li>
                             </ul>
-                            <empty-tips v-else />                    
+                            <empty-tips v-else />
                         </div>
                         <div class="topic-block" v-if="isLoginUser">
                             <h2>我收藏的话题</h2>

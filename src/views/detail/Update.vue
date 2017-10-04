@@ -6,7 +6,6 @@
             header="编辑主题"
             :title="title"
             :tab="tab"
-            :load="loaded"
             :content="content"
             @post="updateThisTopic"/>
         </div>
@@ -30,7 +29,6 @@
                 tab: '',
                 title: '',
                 content: '',
-                loaded: false,
                 canUpdate: false
             }
         },
@@ -70,7 +68,7 @@
                     this.canUpdate = true;
                     this.title = data.title;
                     this.tab = data.tab;
-                    this.loaded = true;
+                    
                     var con = data.content.replace('<div class="markdown-text">', '').replace('</div>', '');
                     this.content = toMarkDown(con);
                 });
@@ -90,9 +88,18 @@
                         type: 'success',
                         message: '编辑成功！',
                         onClose() {
-                            ctx.$router.push(`#/detail/${ctx.topic_id}`) ;
+                            ctx.$router.push(`/detail/${ctx.topic_id}`) ;
                         }
                     });
+                })
+                .catch(error => {
+                    this.$message({
+                        type: 'error',
+                        message: '帖子不存在',
+                        onClose() {
+                            ctx.$router.push('/');
+                        }
+                    })
                 })
             }
         },
@@ -101,7 +108,3 @@
         }
     };
 </script>
-
-<style lang="scss">
-
-</style>

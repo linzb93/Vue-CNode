@@ -58,11 +58,11 @@
                 default() {
                     return '';
                 }
-            },
-            load: {},
+            }
         },
         data() {
             return {
+                notPassValidate: false,
                 selectValue: '',
                 titleValue: '',
                 eContent: '',
@@ -86,23 +86,27 @@
                 return !!this.token;
             }
         },
-        watch: {
-            load() {
-                this.titleValue = this.title;
-                this.selectValue = this.tab;
-                this.eContent = this.content;
-            }
-        },
         methods: {
             post() {
                 var ctx = this;
-                if (this.eContent === '') {
-                    this.$message({
-                        type: 'error',
-                        message: '内容不能为空'
-                    });
+                this.errorHandler([
+                    {
+                        condition: ctx.selectValue === '' && ctx.type === 'post',
+                        msg: '请选择帖子分类'
+                    },
+                    {
+                        condition: ctx.titleValue.length < 10 && ctx.type === 'post',
+                        msg: '标题长度不少于10个字'
+                    },
+                    {
+                        condition: ctx.eContent === '',
+                        msg: '内容不能为空'
+                    }
+                ]);
+                if (this.notPassValidate) {
                     return;
                 }
+                this.notPassValidate = false;
                 this.$emit('post', {
                     title: ctx.titleValue,
                     tab: ctx.selectValue,
@@ -110,7 +114,25 @@
                     reply: ctx.reply
                 });
                 this.eContent = '';
+            },
+            errorHandler(conArray) {
+                for (var i = 0; i < conArray.length; i++) {
+                    if (conArray[i].condition) {
+                        this.$message({
+                            type: 'error',
+                            message: conArray[i].msg
+                        });
+                        this.notPassValidate = true;
+                        return;
+                    }
+                }
+                this.notPassValidate = false;
             }
+        },
+        created() {
+            this.titleValue = this.title;
+            this.selectValue = this.tab;
+            this.eContent = this.content;
         }
     }
 </script>

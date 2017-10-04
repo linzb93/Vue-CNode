@@ -7,14 +7,6 @@ export default {
     },
     tabs: [
         {
-            id: 'all',
-            name: '全部'
-        },
-        {
-            id: 'good',
-            name: '精华'
-        },
-        {
             id: 'share',
             name: '分享'
         },
