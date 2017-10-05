@@ -8,7 +8,7 @@ Vue—CNode 是我用vue.js实现的cnodejs社区的SPA，感谢[cnodejs](http:/
 
 ## 查看项目
 
-1. 克隆项目： https://github.com/linzb93/Vue-CNode
+1. 克隆项目： https://github.com/linzb93/Vue-CNode.git
 2. 安装Node
 3. 安装依赖：在命令行输入 npm install
 4. 启动服务：输入 npm run dev
