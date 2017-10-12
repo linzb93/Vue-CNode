@@ -154,7 +154,8 @@
                     content
                 })
                 .then(res => {
-                    if (res.success === true) {
+                    if (res.data.success === true) {
+                        console.log(1)
                         this.$message({
                             type: 'success',
                             message: '发布成功！'

@@ -2,19 +2,27 @@
     <div :class="['editor-container', containerType]">
         <h3>{{header}}</h3>
         <div v-if="isLogin">
-            <el-select
-            v-model="selectValue"
-            v-if="type === 'post'"
-            placeholder="请选择">
-                <el-option
-                v-for="item in tabs"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id" />
-            </el-select>
-            <el-input v-if="type === 'post'" placeholder="标题长度不少于10个字" v-model="titleValue"/>
-            <markdown-editor v-model="eContent" :configs="configs" />
-            <el-button type="primary" @click="post">提交</el-button>
+            <el-form :model="formModel" :rules="rules" ref="editorForm">
+                <el-form-item prop="tab">
+                    <el-select
+                    v-model="formModel.tab"
+                    v-if="type === 'post'"
+                    placeholder="请选择帖子分类">
+                        <el-option
+                        v-for="item in tabs"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id" />
+                    </el-select>
+                </el-form-item>
+                <el-form-item prop="title">
+                    <el-input v-if="type === 'post'" placeholder="标题长度不少于10个字" v-model="formModel.title"/>
+                </el-form-item>
+                <el-form-item prop="content">
+                    <markdown-editor v-model="formModel.content" :configs="configs" />
+                </el-form-item>
+                <el-button type="primary" @click="submit('editorForm')">提交</el-button>
+            </el-form>
         </div>
         <p class="not-login-tips" v-else>发帖/回帖之前请先<a href="#/login">登录</a>。</p>
     </div>
@@ -22,6 +30,7 @@
 
 <script>
     import MarkdownEditor from 'vue-simplemde/src/markdown-editor';
+    import cloneDeep from 'lodash/cloneDeep';
     import { mapState } from 'vuex';
 
     export default {
@@ -62,10 +71,38 @@
         },
         data() {
             return {
-                notPassValidate: false,
-                selectValue: '',
-                titleValue: '',
-                eContent: '',
+                formModel: {
+                    tab: '',
+                    title: '',
+                    content: ''
+                },
+                rules: {
+                    tab: [
+                        {
+                            required: true,
+                            message: '请选择帖子分类'
+                        }
+                    ],
+                    title: [
+                        {
+                            required: true,
+                            message: '请输入标题',
+                            trigger: 'blur'
+                        },
+                        {
+                            min: 10,
+                            message: '标题长度不少于10个字',
+                            trigger: 'blur'
+                        }
+                    ],
+                    content: [
+                        {
+                            required: true,
+                            message: '帖子内容不能为空',
+                            trigger: 'blur'
+                        }
+                    ]
+                },
                 configs: {
                     status: false, // 禁用底部状态栏
                     spellChecker: false // 禁用拼写检查
@@ -73,7 +110,12 @@
             }
         },
         computed: {
-            ...mapState(['tabs', 'token']),
+            ...mapState(['token']),
+            tabs() {
+                var tabArray = cloneDeep(this.$store.state.tabs);
+                tabArray.pop();
+                return tabArray;
+            },
             containerType() {
                 if (this.type === 'post') {
                     return 'index-editor-container';
@@ -87,52 +129,30 @@
             }
         },
         methods: {
+            submit(formName) {
+                this.$refs[formName].validate(valid => {
+                    if (!valid) {
+                        return false;
+                    } else {
+                        this.post();
+                    }
+                })
+            },
             post() {
                 var ctx = this;
-                this.errorHandler([
-                    {
-                        condition: ctx.selectValue === '' && ctx.type === 'post',
-                        msg: '请选择帖子分类'
-                    },
-                    {
-                        condition: ctx.titleValue.length < 10 && ctx.type === 'post',
-                        msg: '标题长度不少于10个字'
-                    },
-                    {
-                        condition: ctx.eContent === '',
-                        msg: '内容不能为空'
-                    }
-                ]);
-                if (this.notPassValidate) {
-                    return;
-                }
-                this.notPassValidate = false;
                 this.$emit('post', {
-                    title: ctx.titleValue,
-                    tab: ctx.selectValue,
-                    content: ctx.eContent,
+                    title: ctx.formModel.title,
+                    tab: ctx.formModel.tab,
+                    content: ctx.formModel.content,
                     reply: ctx.reply
                 });
-                this.eContent = '';
-            },
-            errorHandler(conArray) {
-                for (var i = 0; i < conArray.length; i++) {
-                    if (conArray[i].condition) {
-                        this.$message({
-                            type: 'error',
-                            message: conArray[i].msg
-                        });
-                        this.notPassValidate = true;
-                        return;
-                    }
-                }
-                this.notPassValidate = false;
+                this.formModel.content = '';
             }
         },
         created() {
-            this.titleValue = this.title;
-            this.selectValue = this.tab;
-            this.eContent = this.content;
+            this.formModel.title = this.title;
+            this.formModel.select = this.tab;
+            this.formModel.content = this.content;
         }
     }
 </script>
@@ -145,10 +165,9 @@
         background: none;
     }
     .markdown-editor {
-        margin-top: 15px;
+        margin-top: 0;
     }
     .editor-container {
-        margin-top: 10px;
         padding-bottom: 15px;
         h3 {
             font-size: 20px;
@@ -166,12 +185,6 @@
             }
         }
         .el-select {
-            margin-top: 15px;
-        }
-        .el-input {
-            margin-top: 15px;
-        }
-        .el-button {
             margin-top: 15px;
         }
     }

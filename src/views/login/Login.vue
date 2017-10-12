@@ -5,7 +5,7 @@
         :visible="true"
         :show-close="false"
         @close="cancel">
-        <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
+        <el-form :model="ruleForm" :rules="rules" ref="loginForm">
             <el-form-item
                 label="Token"
                 label-width="50px"
@@ -23,7 +23,7 @@
             </p>
             <el-form-item>
                 <el-button @click="cancel">取消</el-button>
-                <el-button type="primary" @click="submitForm('ruleForm')">确定</el-button>
+                <el-button type="primary" @click="submitForm('loginForm')">确定</el-button>
             </el-form-item>
         </el-form>
     </el-dialog>
@@ -50,7 +50,10 @@
                 },
                 rules: {
                     token: [
-                        { validator: vToken, trigger: 'submit'}
+                        {
+                            validator: vToken,
+                            trigger: 'submit'
+                        }
                     ]
                 }
             }
