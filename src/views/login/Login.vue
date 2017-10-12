@@ -57,7 +57,7 @@
         },
         methods: {
             cancel() {
-                this.$router.push('/');
+                this.$router.go(-1);
             },
             submitForm(formName) {
                 this.$refs[formName].validate(valid => {
@@ -87,7 +87,7 @@
                         message: '登录成功!',
                         duration: 1000,
                         onClose() {
-                            ctx.$router.push('/');
+                            ctx.$router.go(-1);
                         }
                     });
                     callback();
@@ -98,7 +98,7 @@
         },
         created() {
             if (ls.store('token')) {
-                this.$router.push('/');
+                this.$router.go(-1);
             }
         }
     };

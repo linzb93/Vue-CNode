@@ -1,6 +1,6 @@
 <template>
-    <main>
-        <div class="update-container wrapper" v-if="canUpdate">
+    <container :load="loadStatus" :errorMsg="loadErrorMsg">
+        <div class="update-container wrapper">
             <editor
             type="post"
             header="编辑主题"
@@ -9,27 +9,30 @@
             :content="content"
             @post="updateThisTopic"/>
         </div>
-    </main>
+    </container>
 </template>
 
 <script>
     import { mapState } from 'vuex';
     import toMarkDown from 'to-markdown';
+    import Container from '@/views/layout/Container';
     import Editor from '@/components/Editor';
     import { getTopicDetail, updateTopic } from '@/service';
 
     export default {
         name: 'Update',
         components: {
+            Container,
             Editor
         },
         data() {
             return {
+                loadStatus: 'loading',
+                loadErrorMsg: '',
                 topic_id: '',
                 tab: '',
                 title: '',
-                content: '',
-                canUpdate: false
+                content: ''
             }
         },
         computed: {
@@ -42,13 +45,8 @@
             render() {
                 var ctx = this;
                 if (!this.token) {
-                    this.$message({
-                        type: 'warning',
-                        message: '请先登录',
-                        onClose() {
-                            ctx.$router.push('/login');
-                        }
-                    });
+                    this.loadStatus = 'error';
+                    this.loadErrorMsg = '请先登录';
                     return;
                 }
                 this.topic_id = this.$route.params.id;
@@ -56,16 +54,10 @@
                 .then(res => {
                     var data = res.data.data;
                     if (data.author.loginname !== this.loginname) {
-                        this.$message({
-                            type: 'error',
-                            message: '您没有编辑此帖子的权限',
-                            onClose() {
-                                ctx.$router.push('/');
-                            }
-                        });
+                        this.loadStatus = 'error';
+                        this.loadErrorMsg = '您没有编辑此帖子的权限';
                         return;
                     }
-                    this.canUpdate = true;
                     this.title = data.title;
                     this.tab = data.tab;
                     

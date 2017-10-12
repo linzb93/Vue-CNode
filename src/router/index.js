@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import CoHeader from '@/components/header';
+import CoHeader from '@/views/layout/Header';
 import Login from '@/views/login/Login';
 import Index from '@/views/index/Index';
 import Detail from '@/views/detail/Detail';

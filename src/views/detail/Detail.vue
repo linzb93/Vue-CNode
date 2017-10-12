@@ -1,6 +1,6 @@
 <template>
-    <main v-loading.fullscreen.lock="loading">
-        <div class="detail-container wrapper" v-if="hasDetailPage">
+    <container :load="loadStatus" errorMsg="帖子不存在">
+        <div class="detail-container wrapper">
             <!-- 楼主发的 -->
             <h1>{{title}}</h1>
             <div class="topic-info clearfix">
@@ -44,26 +44,27 @@
             <editor header="回复帖子" type="reply" @post="replyTopic"/>
         </div>
         <to-top />
-    </main>
+    </container>
 </template>
 
 <script>
     import { mapState } from 'vuex';
     import { getTopicDetail, collectTopic, decollectTopic, upReply, createReply } from '@/service';
     import { ago } from '@/filter';
+    import Container from '@/views/layout/Container';
     import Editor from '@/components/Editor';
     import ToTop from '@/components/ToTop';
     
     export default {
         name: 'Detail',
         components: {
+            Container,
             Editor,
             ToTop
         },
         data() {
             return {
-                loading: true,
-                hasDetailPage: false,
+                loadStatus: 'loading',
                 topic_id: '',
                 title: '',
                 date: '',
@@ -93,8 +94,6 @@
                 this.topic_id = toTopicId || this.$route.params.id;
                 getTopicDetail(this.token, this.topic_id)
                 .then(res => {
-                    this.loading = false;
-                    this.hasDetailPage = true;
                     var data = res.data.data;
                     this.author = data.author.loginname;
                     this.title = data.title;
@@ -114,17 +113,10 @@
                         };
                     });
                     this.showReplyList = this.replyList.filter((item, index) => index < 10);
+                    this.loadStatus = 'complete';
                 })
                 .catch(error => {
-                    var ctx = this;
-                    this.loading = false;
-                    this.$message({
-                        type: 'error',
-                        message: '帖子不存在！',
-                        onClose() {
-                            ctx.$router.push('/');
-                        }
-                    });
+                    this.loadStatus = 'error';
                 });
             },
             collectThisTopic() {

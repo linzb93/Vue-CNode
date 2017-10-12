@@ -1,5 +1,5 @@
 <template>
-    <main>
+    <container :load="loadStatus" errorMsg="服务器故障，请稍后再试">
         <div class="wrapper">
             <div class="topic-tab">
                 <a
@@ -44,7 +44,7 @@
                 type="post" 
                 @post="postTopic"/>
         </div>
-    </main>
+    </container>
 </template>
 
 <script>
@@ -52,6 +52,7 @@
     import cloneDeep from 'lodash/cloneDeep';
     import { getTopicList, createNewTopic } from '@/service';
     import { shorten, ago } from '@/filter';
+    import Container from '@/views/layout/Container';
     import Pagination from '@/components/Pagination';
     import EmptyTips from '@/components/Empty';
     import Editor from '@/components/Editor';
@@ -59,12 +60,14 @@
     export default {
         name: 'Index',
         components: {
+            Container,
             Pagination,
             EmptyTips,
             Editor
         },
         data() {
             return {
+                loadStatus: 'loading',
                 topics: [],
                 showEmptyTips: false, //无内容返回时显示
                 changeTab: false, //分页重置的标志
@@ -116,6 +119,10 @@
                             visit_count: item.visit_count
                         }
                     });
+                    this.loadStatus = 'complete';
+                })
+                .catch(err => {
+                    this.loadStatus = 'error';
                 });
             },
             tabInit() {
@@ -129,8 +136,8 @@
                 this.tabs.forEach((item, index) => {
                     this.$set(item, 'active', index === tabIndex ? 'on' : '');
                 });
-                this.$store.commit('tabSwitch', id);
-                this.$store.commit('changePage', 1);
+                this.$store.commit('index/tabSwitch', id);
+                this.$store.commit('index/changePage', 1);
                 this.changeTab = !this.changeTab;
                 this.render(id);
             },

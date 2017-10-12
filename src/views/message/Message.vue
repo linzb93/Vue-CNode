@@ -1,10 +1,10 @@
 <template>
-    <main>
+    <container :load="loadStatus" errorMsg="请先登录">
         <div class="message-main wrapper" v-if="!!token">
             <div class="message-block">
                 <div class="clearfix">
                     <h3>未读消息</h3>
-                    <a class="btn-read-all" href="javascript:;" @click="markAllRead" v-if="unread_length !== 0">标记所有消息为已读</a>
+                    <el-button type="text" class="btn-read-all" @click="markAllRead" v-if="unread_length !== 0">标记所有消息为已读</el-button>
                 </div>
                 <ul class="message-con" v-if="unread_msg_list.length > 0">
                     <li v-for="msg in unread_msg_list" :key="msg.id">
@@ -29,21 +29,24 @@
                 <empty-tips title="暂无已读消息" v-if="read_msg_list.length === 0" />
             </div>
         </div>
-    </main>
+    </container>
 </template>
 
 <script>
     import { mapState } from 'vuex';
+    import Container from '@/views/layout/Container';
     import EmptyTips from '@/components/Empty';
     import { getAllMsg, markAllMsgRead, markOneMsgRead } from '@/service';
 
     export default {
         name: 'Message',
         components: {
+            Container,
             EmptyTips
         },
         data() {
             return {
+                loadStatus: 'loading',
                 unread_msg_list: [],
                 read_msg_list: [],
                 unread_length: 0
@@ -72,6 +75,10 @@
                         topicId: item.topic.id
                     }));
                     this.unread_length = this.unread_msg_list.length;
+                    this.loadStatus = 'complete';
+                })
+                .catch(err => {
+                    this.loadStatus = 'error';
                 });
             },
             markAllRead() {

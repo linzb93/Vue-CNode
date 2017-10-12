@@ -1,9 +1,6 @@
 <template>
-    <main>
-        <div
-            class="user-container wrapper clearfix"
-            v-if="hasUser"
-            v-loading.fullscreen.lock="loading">
+    <container :load="loadStatus" errorMsg="用户不存在">
+        <div class="user-container wrapper clearfix">
             <el-row :gutter="30">
                 <el-col :span="6">
                     <div class="user-sidebar">
@@ -50,24 +47,25 @@
                 </el-col>
             </el-row>
         </div>
-    </main>
+    </container>
 </template>
 
 <script>
     import { getUserDetail, getUserCollect, decollectTopic } from '@/service';
     import { mapState } from 'vuex';
     import { ago } from '@/filter';
+    import Container from '@/views/layout/Container';
     import EmptyTips from '@/components/Empty';
 
     export default {
         name: 'User',
         components: {
+            Container,
             EmptyTips
         },
         data() {
             return {
-                loading: true,
-                hasUser: false,
+                loadStatus: 'loading',
                 avatar: '',
                 name: '',
                 create_at: '',
@@ -90,8 +88,6 @@
                 getUserDetail(userId)
                 .then(res => {
                     var data = res.data.data;
-                    this.loading = false;
-                    this.hasUser = true;
                     this.avatar = data.avatar_url;
                     this.name = data.loginname;
                     this.score = data.score;
@@ -111,19 +107,12 @@
                         last_reply_at,
                         title
                     }));
+                    this.loadStatus = 'complete';
                 }).catch(error => {
-                    var ctx = this;
-                    this.loading = false;
-                    this.$message({
-                        type: 'error',
-                        message: '用户不存在！',
-                        onClose() {
-                            ctx.$router.push('/');
-                        }
-                    });
+                    this.loadStatus = 'error';
                 });
 
-                if (this.token) {
+                if (this.isLoginUser) {
                     getUserCollect(userId)
                     .then(res => {
                         var data = res.data.data;
