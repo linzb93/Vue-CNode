@@ -70,39 +70,42 @@
             }
         },
         data() {
+            var rules = {
+                content: [
+                    {
+                        required: true,
+                        message: '帖子内容不能为空',
+                        trigger: 'blur'
+                    }
+                ]
+            };
+            if (this.type === 'post') {
+                rules.tab =  [
+                        {
+                            required: true,
+                            message: '请选择帖子分类'
+                        }
+                    ];
+                rules.title = [
+                    {
+                        required: true,
+                        message: '请输入标题',
+                        trigger: 'blur'
+                    },
+                    {
+                        min: 10,
+                        message: '标题长度不少于10个字',
+                        trigger: 'blur'
+                    }
+                ]
+            }
             return {
                 formModel: {
                     tab: '',
                     title: '',
                     content: ''
                 },
-                rules: {
-                    tab: [
-                        {
-                            required: true,
-                            message: '请选择帖子分类'
-                        }
-                    ],
-                    title: [
-                        {
-                            required: true,
-                            message: '请输入标题',
-                            trigger: 'blur'
-                        },
-                        {
-                            min: 10,
-                            message: '标题长度不少于10个字',
-                            trigger: 'blur'
-                        }
-                    ],
-                    content: [
-                        {
-                            required: true,
-                            message: '帖子内容不能为空',
-                            trigger: 'blur'
-                        }
-                    ]
-                },
+                rules,
                 configs: {
                     status: false, // 禁用底部状态栏
                     spellChecker: false // 禁用拼写检查
