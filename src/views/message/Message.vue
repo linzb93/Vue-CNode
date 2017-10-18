@@ -132,6 +132,7 @@
         h3 {
             font-size: 20px;
             color: #333;
+            float: left;
         }
         a {
             color: #21a9de;

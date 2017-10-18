@@ -299,6 +299,7 @@
             p {
                 margin-bottom: 1em;
                 color: #666;
+                white-space: pre-wrap;
             }
             a {
                 color: #21a9de;

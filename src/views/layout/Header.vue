@@ -7,7 +7,7 @@
                 </a>
             </h1>
             <nav>
-                <el-badge v-for="item in nav" :key="item.name":is-dot="item.isDot">
+                <el-badge v-for="item in nav" :key="item.name" :is-dot="item.isDot">
                     <a :href="item.url">{{item.name}}</a>
                 </el-badge>
             </nav>
