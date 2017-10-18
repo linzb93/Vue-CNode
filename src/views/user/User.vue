@@ -66,6 +66,7 @@
         data() {
             return {
                 loadStatus: 'loading',
+                isLoginUser: false,
                 avatar: '',
                 name: '',
                 create_at: '',
@@ -78,13 +79,22 @@
         },
         computed: {
             ...mapState(['token']),
-            isLoginUser() {
-                return this.name === this.$store.state.userInfo.name;
+        },
+        watch: {
+            '$store.state.userInfo.name'() {
+                var userId = this.$route.params.id;
+                if (this.$store.state.userInfo.name === this.$route.params.id) {
+                    this.getCollectTopic(userId);
+                }
             }
         },
         methods: {
             render(toUserId) {
                 var userId = toUserId || this.$route.params.id;
+                if (this.$store.state.userInfo.name === userId) {
+                    this.isLoginUser = true;
+                    this.getCollectTopic(userId);
+                }
                 getUserDetail(userId)
                 .then(res => {
                     var data = res.data.data;
@@ -111,17 +121,17 @@
                 }).catch(error => {
                     this.loadStatus = 'error';
                 });
-
-                if (this.isLoginUser) {
-                    getUserCollect(userId)
-                    .then(res => {
-                        var data = res.data.data;
-                        this.collectList = data.map(({id, title}) => ({
-                            id,
-                            title
-                        }))
-                    });
-                }
+            },
+            getCollectTopic(userId) {
+                getUserCollect(userId)
+                .then(res => {
+                    var data = res.data.data;
+                    this.isLoginUser = true;
+                    this.collectList = data.map(({id, title}) => ({
+                        id,
+                        title
+                    }))
+                });
             },
             decollect(id, index) {
                 decollectTopic(this.token, id)
