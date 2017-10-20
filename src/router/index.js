@@ -7,6 +7,7 @@ import Detail from '@/views/detail/Detail';
 import Update from '@/views/detail/Update';
 import User from '@/views/user/User';
 import Message from '@/views/message/Message';
+import Demo from '@/views/demo/Demo';
 
 Vue.use(Router);
 
@@ -51,6 +52,12 @@ export default new Router({
             components: {
                 header: CoHeader,
                 main: Message
+            }
+        },
+        {
+            path: '/demo',
+            components: {
+                main: Demo
             }
         },
         {
