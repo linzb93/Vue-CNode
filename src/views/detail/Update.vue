@@ -1,13 +1,7 @@
 <template>
     <container :load="loadStatus" :errorMsg="loadErrorMsg">
         <div class="update-container wrapper">
-            <editor
-            type="post"
-            header="编辑主题"
-            :title="title"
-            :tab="tab"
-            :content="content"
-            @post="updateThisTopic"/>
+            <editor type="post" header="编辑主题" :title="title" :tab="tab" :content="content" @post="updateThisTopic"/>
         </div>
     </container>
 </template>

@@ -61,11 +61,13 @@
 </script>
 
 <style lang="scss">
+    @import "../style/assist/variable";
+    
     .pagination {
         margin: 20px 0 0 20px;
         padding-bottom: 10px;
         a {
-            color: #21a9de;
+            color: $linkColor;
             margin: 0 5px;
         }
     }

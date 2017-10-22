@@ -25,18 +25,13 @@
                         <span class="level-num">{{index + 1}}楼</span>
                         <span class="date">发布于：{{reply.date | ago}}</span>
                         <i class="fa fa-reply" aria-hidden="true" title="回复" @click="beforeReplyLevel(reply)"></i>
-                        <span
-                            :class="['like', reply.is_uped ? 'on' : '']"
-                            :title="reply.is_uped ? '取消点赞' : '点赞'"
-                            @click="switchLike(reply)"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i>{{reply.upnum}}</span>
+                        <span :class="['like', reply.is_uped ? 'on' : '']" :title="reply.is_uped ? '取消点赞' : '点赞'" @click="switchLike(reply)">
+                            <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+                            {{reply.upnum}}
+                        </span>
                     </div>
                     <div class="topic-main" v-html="reply.content"></div>
-                    <editor
-                        :header="'回复' + reply.author"
-                        :reply="reply"
-                        type="replyLevel"
-                        v-if="reply.showEditor"
-                        @post="replyTopic"/>
+                    <editor :header="'回复' + reply.author" :reply="reply" type="replyLevel" v-if="reply.showEditor" @post="replyTopic"/>
                 </li>
             </ul>
             <div class="load-more" @click="loadMore" v-show="!loadAllReplies">加载更多</div>
@@ -198,7 +193,7 @@
 </script>
 
 <style lang="scss">
-    @import "../../style/assist/variable";    
+    @import "../../style/assist/variable";
 
     .detail-container {
         padding: 1px 30px;
@@ -211,7 +206,7 @@
         }
         h1 {
             font-size: 24px;
-            color: #333;
+            color: $titleColor;
             padding-top: 30px;
             text-align: center;
         }
@@ -220,18 +215,18 @@
             padding-bottom: 6px;
             span {
                 margin-right: 25px;
-                color: #666;
+                color: $conColor;
                 a {
-                    color: #666;
+                    color: $conColor;
                 }
             }
             .fa-pencil-square-o {
-                color: #666;
+                color: $conColor;
             }
         }
         .tag-author {
             float: left;
-            color: #666;
+            color: $conColor;
             margin-left: 5px;
             position: relative;
             top: 1px;
@@ -246,9 +241,9 @@
             line-height: 30px;
             font-size: 14px;
             &.on {
-                background: #999;
+                background: #99a9bf;
                 &:hover {
-                    background: lighten(#999, 5%);
+                    background: lighten(#99a9bf, 5%);
                 }
             }
             &:hover {
@@ -266,7 +261,7 @@
             h1,h2,h3,h4,h5,h6 {
                 margin-bottom: 0.5em;
                 font-weight: bold;
-                color: #333;
+                color: $titleColor;
                 line-height: 1.5;
                 border-bottom: $border;
                 a:hover {
@@ -298,15 +293,15 @@
             }
             p {
                 margin-bottom: 1em;
-                color: #666;
+                color: $conColor;
                 white-space: pre-wrap;
             }
             a {
-                color: #21a9de;
+                color: $linkColor;
                 margin-bottom: 1em;
             }
             code {
-                color: #666;
+                color: $conColor;
             }
             ul {
                 margin-bottom: 1em;
@@ -320,7 +315,7 @@
             }
             blockquote {
                 padding: 3px 15px;
-                border-left: 3px solid #ccc;
+                border-left: 3px solid #e5e9f2;
                 margin-left: 0;
                 p {
                     margin-bottom: 0;
@@ -335,16 +330,16 @@
                 margin-bottom: 15px;
             }
             tr {
-                border-top: 1px solid #ccc;
+                border-top: $border;
                 background-color: #fff;
                 margin: 0;
                 padding: 0;
                 &:nth-child(2n) {
-                    background-color: #f8f8f8;
+                    background-color: #f9fafc;
                 }
             }
             th, td {
-                border: 1px solid #ccc;
+                border: $border;
                 text-align: left;
                 margin: 0;
                 padding: 6px 13px;
@@ -356,12 +351,12 @@
             background: #e1e1e1;
         }
         .reply-count {
-            color: #666;
+            color: $conColor;
             border-bottom: $border;
             padding-bottom: 8px;
             span {
                 margin: 0 2px;
-                color: #f00;
+                color: #ff4949;
             }
         }
         .topic-level-list {
@@ -376,17 +371,17 @@
                 font-size: 16px;
                 font-weight: bold;
                 float: left;
-                color: #333;
+                color: $titleColor;
             }
             .level-num {
-                color: #666;
+                color: $conColor;
                 margin: 1px 0 0 10px;
                 float: left;
             }
             .date {
                 margin: 1px 0 0 10px;
                 float: left;
-                color: #666;
+                color: $conColor;
             }
             .like {
                 cursor: pointer;
@@ -434,7 +429,7 @@
             border: $border;
             font-size: 16px;
             text-align: center;
-            color: #333;
+            color: $conColor;
             line-height: 40px;
             margin: 0 auto 10px;
             &:hover {
@@ -459,10 +454,10 @@
             background-color: transparent;
         }
         .pln {
-            color: #000;
+            color: $titleColor;
         }
         .clo, .opn, .pun {
-            color: #660;
+            color: $conColor;
         }
     }
 </style>

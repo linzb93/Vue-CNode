@@ -19,11 +19,13 @@
 </script>
 
 <style lang="scss">
+    @import "../style/assist/variable";
+
     .empty-tips {
         text-align: center;
         padding-top: 20px;
         p {
-            color: #666;
+            color: $conColor;
             font-size: 18px;
             margin-top: 16px;
         }

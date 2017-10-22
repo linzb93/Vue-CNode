@@ -123,6 +123,7 @@
 
 <style lang="scss">
     @import "../../style/assist/mixin";
+    @import "../../style/assist/variable";
     
     .message-main {
         padding: 15px 0;
@@ -131,18 +132,18 @@
         margin: 30px;
         h3 {
             font-size: 20px;
-            color: #333;
+            color: $titleColor;
             float: left;
         }
         a {
-            color: #21a9de;
+            color: $linkColor;
         }
         span {
             margin: 0 5px;
         }
         .btn-read-all {
             float: right;
-            color: #21a9de;
+            color: $linkColor;
         }
     }
     .message-con {

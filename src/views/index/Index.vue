@@ -2,14 +2,7 @@
     <container :load="loadStatus" errorMsg="服务器故障，请稍后再试">
         <div class="wrapper">
             <div class="topic-tab">
-                <a
-                    v-for="(tab, index) in tabs"
-                    :key="tab.id"
-                    :class="tab.active"
-                    @click="tabSwitch(tab.id, index)"
-                    href="javascript:;">
-                    {{tab.name}}
-                </a>
+                <a v-for="(tab, index) in tabs" :key="tab.id" :class="tab.active" @click="tabSwitch(tab.id, index)" href="javascript:;">{{tab.name}}</a>
             </div>
             <ul class="index-list" v-show="!showEmptyTips">
                 <li class="clearfix" v-for="topic in topics" :key="topic.id">
@@ -32,17 +25,9 @@
                     </div>
                 </li>
             </ul>
-            <pagination
-            :isLastPage="isLastPage"
-            :initPage="page"
-            @change="changePage"
-            v-model="changeTab"
-            v-if="!showEmptyTips" />
+            <pagination :isLastPage="isLastPage" :initPage="page" @change="changePage" v-model="changeTab" v-if="!showEmptyTips" />
             <empty-tips v-else />
-            <editor
-                header="发布新帖"
-                type="post" 
-                @post="postTopic"/>
+            <editor header="发布新帖" type="post" @post="postTopic"/>
         </div>
     </container>
 </template>
@@ -233,7 +218,7 @@
             max-width: 700px;
             margin-right: 10px;
             a {
-                color: #333;
+                color: $titleColor;
             }
         }
         .topic-tag {
@@ -244,13 +229,13 @@
             color: $mainColor;
         }
         .topic-good {
-            color: $good;
+            color: #ef4141;
         }
         .topic-time {
             float: right;
             width: 200px;
             text-align: right;
-            color: #666;
+            color: $conColor;
             line-height: 2;
         }
     }
@@ -259,7 +244,7 @@
         padding: 15px 30px;
         h3 {
             font-size: 18px;
-            color: #333;
+            color: $titleColor;
             font-weight: bold;
         }
         .el-select,

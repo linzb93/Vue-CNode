@@ -34,7 +34,8 @@
 </script>
 
 <style lang="scss"> 
-
+    @import "../style/assist/variable";
+    
     .back-to-top {
         cursor: pointer;
         position: fixed;
@@ -42,9 +43,9 @@
         bottom: 120px;
         width: 60px;
         height: 60px;
-        border: 1px solid #bbb;
+        border: $border;
         font-size: 40px;
-        color: #bbb;
+        color: #d3dce6;
         text-align: center;
         background: #fff;
         &::before {

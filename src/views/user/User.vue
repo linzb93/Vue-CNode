@@ -153,13 +153,14 @@
 
 <style lang="scss">
     @import "../../style/assist/mixin";
+    @import "../../style/assist/variable";    
 
     main .user-container {
         background: none;
         a {
-            color: #333;
+            color: $titleColor;
             &:hover {
-                color: #21a9de;
+                color: $linkColor;
             }
         }
     }
@@ -173,7 +174,7 @@
         }
         p {
             padding: 10px 15px;
-            color: #333;
+            color: $titleColor;
         }
         .fa-github {
             margin-right: 6px;
@@ -181,7 +182,7 @@
             vertical-align: middle;
         }
         a {
-            color: #333;
+            color: $titleColor;
         }
     }
     .user-main {
@@ -194,7 +195,7 @@
             font-size: 20px;
             margin-bottom: 15px;
             font-weight: bold;
-            color: #333;
+            color: $titleColor;
         }
         li {
             margin-bottom: 12px;
@@ -211,7 +212,7 @@
             right: 0;
             top: 2px;
             font-size: 12px;
-            color: #999;
+            color: $conColor;
         }
         .btn-collect {
             position: absolute;

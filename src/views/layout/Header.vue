@@ -78,6 +78,8 @@
 </script>
 
 <style lang="scss">
+    @import "../../style/assist/variable"; 
+    
     header {
         background: #666;
         height: 60px;
@@ -167,7 +169,7 @@
             a {
                 display: block;
                 line-height: 2;
-                color: #666;
+                color: $titleColor;
                 font-size: 14px;
                 &:hover {
                     background: #eee;

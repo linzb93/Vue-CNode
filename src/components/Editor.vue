@@ -4,15 +4,8 @@
         <div v-if="isLogin">
             <el-form :model="formModel" :rules="rules" ref="editorForm">
                 <el-form-item prop="tab">
-                    <el-select
-                    v-model="formModel.tab"
-                    v-if="type === 'post'"
-                    placeholder="请选择帖子分类">
-                        <el-option
-                        v-for="item in tabs"
-                        :key="item.id"
-                        :label="item.name"
-                        :value="item.id" />
+                    <el-select v-model="formModel.tab" v-if="type === 'post'" placeholder="请选择帖子分类">
+                        <el-option v-for="item in tabs" :key="item.id" :label="item.name" :value="item.id" />
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="title">

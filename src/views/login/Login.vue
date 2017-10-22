@@ -108,11 +108,13 @@
 </script>
 
 <style lang="scss">
+    @import "../../style/assist/variable";
+    
     .login-form-tips {
         margin-top: 9px;
         text-align: right;
         a {
-            color: #333;
+            color: $conColor;
         }
     }
 </style>
