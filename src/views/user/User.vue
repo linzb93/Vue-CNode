@@ -53,7 +53,7 @@
 <script>
     import { getUserDetail, getUserCollect, decollectTopic } from '@/service';
     import { mapState } from 'vuex';
-    import { ago } from '@/filter';
+    import { ago } from '@/filters';
     import Container from '@/views/layout/Container';
     import EmptyTips from '@/components/Empty';
 

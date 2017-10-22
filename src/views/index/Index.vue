@@ -51,7 +51,7 @@
     import { mapState } from 'vuex';
     import cloneDeep from 'lodash/cloneDeep';
     import { getTopicList, createNewTopic } from '@/service';
-    import { shorten, ago } from '@/filter';
+    import { shorten, ago } from '@/filters';
     import Container from '@/views/layout/Container';
     import Pagination from '@/components/Pagination';
     import EmptyTips from '@/components/Empty';

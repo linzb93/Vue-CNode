@@ -50,7 +50,7 @@
 <script>
     import { mapState } from 'vuex';
     import { getTopicDetail, collectTopic, decollectTopic, upReply, createReply } from '@/service';
-    import { ago } from '@/filter';
+    import { ago } from '@/filters';
     import Container from '@/views/layout/Container';
     import Editor from '@/components/Editor';
     import ToTop from '@/components/ToTop';
@@ -73,8 +73,7 @@
                 isCollected: false,
                 replyCount: 0,
                 replyList: [],
-                loadReplyPage: 1,
-                showReplyList: []
+                loadReplyPage: 1
             }
         },
         computed: {
@@ -87,6 +86,9 @@
             },
             loadAllReplies() {
                 return this.replyList.length === this.showReplyList.length;
+            },
+            showReplyList() {
+                return this.replyList.filter((item, index) => index < 10 * this.loadReplyPage);
             }
         },
         methods: {
@@ -112,7 +114,6 @@
                             showEditor: false
                         };
                     });
-                    this.showReplyList = this.replyList.filter((item, index) => index < 10);
                     this.loadStatus = 'complete';
                 })
                 .catch(error => {
@@ -133,7 +134,6 @@
             },
             loadMore() {
                 this.loadReplyPage++;
-                this.showReplyList = this.replyList.filter((item, index) => index < (this.loadReplyPage * 10));
             },
             switchLike(reply) {
                 if (!this.token) {

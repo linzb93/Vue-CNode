@@ -8,7 +8,20 @@
 <script>
     export default {
         name: 'Pagination',
-        props: ['isLastPage', 'initPage', 'value'],
+        props: {
+            isLastPage: {
+                type: Boolean,
+                required: true
+            },
+            value: {
+                type: Boolean,
+                required: true
+            },
+            initPage: {
+                type: Number,
+                required: true
+            }
+        },
         data() {
             return {
                 isFirstPage: true,

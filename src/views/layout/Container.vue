@@ -14,7 +14,16 @@
 <script>
     export default {
         name: 'Container',
-        props: ['load', 'errorMsg'],
+        props: {
+            load: {
+                type: String,
+                required: true
+            },
+            errorMsg: {
+                type: String,
+                required: true
+            }
+        },
         data() {
             return {
                 loaded: false
