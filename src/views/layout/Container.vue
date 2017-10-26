@@ -7,7 +7,7 @@
             <div></div>
             <div></div>
         </div>
-        <slot v-else></slot>
+        <slot v-else-if="!loadError"></slot>
     </main>
 </template>
 
@@ -27,6 +27,11 @@
         data() {
             return {
                 loaded: false
+            }
+        },
+        computed: {
+            loadError() {
+                return this.loaded == true && this.load === 'error';
             }
         },
         watch: {
