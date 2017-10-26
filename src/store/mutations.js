@@ -2,7 +2,8 @@ import {
     SAVE_TOKEN,
     SAVE_INFO,
     LOGOUT,
-    TOGGLE_UNREAD_MSG_STATE
+    TOGGLE_UNREAD_MSG_STATE,
+    SWITCH_LOGIN_MODAL
 } from './mutation-types';
 import { ls } from '@/utils/store';
 
@@ -24,5 +25,8 @@ export default {
     },
     [TOGGLE_UNREAD_MSG_STATE] (state, unreadState) {
         state.hasUnreadMsg = unreadState;
+    },
+    [SWITCH_LOGIN_MODAL] (state, isShowed) {
+        state.isShowedLoginDialog = isShowed;
     }
 };

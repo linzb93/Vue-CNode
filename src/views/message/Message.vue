@@ -37,6 +37,7 @@
     import Container from '@/views/layout/Container';
     import EmptyTips from '@/components/Empty';
     import { getAllMsg, markAllMsgRead, markOneMsgRead } from '@/service';
+    import { loginMixin } from '@/mixin';
 
     export default {
         name: 'Message',
@@ -55,6 +56,7 @@
         computed: {
             ...mapState(['token']),
         },
+        mixins: [loginMixin],
         methods: {
             render() {
                 getAllMsg(this.token)
@@ -76,9 +78,6 @@
                     }));
                     this.unread_length = this.unread_msg_list.length;
                     this.loadStatus = 'complete';
-                })
-                .catch(err => {
-                    this.loadStatus = 'error';
                 });
             },
             markAllRead() {
@@ -101,22 +100,11 @@
         },
         created() {
             var ctx = this;
-            if (!ctx.token) {
-                ctx.$message({
-                    type: 'warning',
-                    message: '请先登录',
-                    onClose() {
-                        ctx.$router.push('/login');
-                    }
-                });
-                return;
+            if (ctx.token) {
+                this.render();
+            } else {
+                this.loginValidate();
             }
-            this.render();
-        },
-        beforeRouteEnter(to, from, next) {
-            next(vm => {
-                
-            })
         }
     }
 </script>

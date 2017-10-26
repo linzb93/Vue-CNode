@@ -23,5 +23,6 @@ export default {
             name: '客户端测试'
         }
     ],
-    hasUnreadMsg: false
+    hasUnreadMsg: false,
+    isShowedLoginDialog: false
 };

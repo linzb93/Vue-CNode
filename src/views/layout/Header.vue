@@ -19,19 +19,43 @@
                     <a @click="logout" href="javascript:;">退出</a>
                 </div>
             </div>
-            <a class="btn-login" href="#/login" v-else>登录</a>
+            <a class="btn-login" href="javascript:;" @click="switchLoginDialog(true)" v-else>登录</a>
         </div>
+        <el-dialog title="登录" size="tiny" :visible="isShowedLoginDialog" :show-close="false">
+            <el-form :model="ruleForm" :rules="rules" ref="loginForm">
+                <el-form-item label="Token" label-width="50px" label-position="left" prop="token">
+                    <el-input placeholder="请输入token" size="small" v-model.lazy.trim="ruleForm.token">
+                    </el-input>
+                </el-form-item>
+                <p class="login-form-tips">
+                    <a href="https://cnodejs.org/setting" target="_blank">如何查看 Access Token？</a>
+                </p>
+                <el-form-item>
+                    <el-button type="primary" @click="submitForm('loginForm')">确定</el-button>
+                    <el-button @click="switchLoginDialog(false)">取消</el-button>                    
+                </el-form-item>
+            </el-form>
+        </el-dialog>
     </header>
 </template>
 
 <script>
     import { mapState } from 'vuex';
-    import { getUnreadMsgCount } from '@/service';
+    import { tokenValidate, getUnreadMsgCount } from '@/service';
+    import { ls } from '@/utils/store';
 
     export default {
         name: 'Header',
         data() {
             var ctx = this;
+            var vToken = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('token不能为空'))
+                } else {
+                    this.loginHandle(value, callback);
+                }
+            };
+
             return {
                 nav: [
                     {
@@ -44,7 +68,19 @@
                         url: '#/message',
                         isDot: ctx.hasUnreadMsg
                     }
-                ]
+                ],
+                canSubmit: true,
+                ruleForm: {
+                    token: ''
+                },
+                rules: {
+                    token: [
+                        {
+                            validator: vToken,
+                            trigger: 'submit'
+                        }
+                    ]
+                }
             }
         },
         computed: {
@@ -57,11 +93,53 @@
             isLogin() {
                 return !!this.$store.state.token;
             },
-            ...mapState(['token', 'hasUnreadMsg'])
+            ...mapState(['token', 'hasUnreadMsg', 'isShowedLoginDialog'])
         },
         methods: {
             logout() {
                 this.$store.commit('LOGOUT');
+            },
+            switchLoginDialog(isShowed) {
+                this.$store.commit('SWITCH_LOGIN_MODAL', isShowed);
+                if (!isShowed) {
+                    this.$refs.loginForm.resetFields();
+                }
+            },
+            submitForm(formName) {
+                this.$refs[formName].validate(valid => {
+                    if (!valid) {
+                        return false;
+                    }
+                });
+            },
+            loginHandle(token, callback) {
+                this.canSubmit = false;
+                setTimeout(() => {
+                    this.canSubmit = true;
+                }, 3000);
+                tokenValidate(token)
+                .then(res => {
+                    var data = res.data;
+                    var ctx = this;
+                    this.$store.commit('SAVE_INFO', {
+                        name: data.loginname,
+                        id: data.id,
+                        avatar: data.avatar_url
+                    });
+                    this.$store.commit('SAVE_TOKEN', token);
+                    ls.store('token', token);
+                    this.$message({
+                        type: 'success',
+                        message: '登录成功!',
+                        duration: 1000,
+                        onClose() {
+                            ctx.$store.commit('SWITCH_LOGIN_MODAL', false);                            
+                        }
+                    });
+                    callback();
+                }).catch(res => {
+                    callback(new Error('token不正确'));
+                });
             }
         },
         created() {
@@ -176,6 +254,13 @@
                     text-decoration: none;
                 }
             }
+        }
+    }
+    .login-form-tips {
+        margin-top: 9px;
+        text-align: right;
+        a {
+            color: $conColor;
         }
     }
 </style>

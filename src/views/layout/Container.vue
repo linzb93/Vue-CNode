@@ -31,6 +31,9 @@
         },
         watch: {
             load(value) {
+                if (this.loaded) {
+                    return;
+                }
                 var ctx = this;
                 this.loaded = true;
                 if (value === 'error') {
@@ -39,13 +42,30 @@
                         message: ctx.errorMsg,
                         onClose() {
                             if (ctx.errorMsg === '请先登录') {
-                                ctx.$router.push('/login');
+                                ctx.$store.commit('SWITCH_LOGIN_MODAL', true);
                                 return;
                             }
                             ctx.$router.push('/');
                         }
                     });
                 }
+            }
+        },
+        created() {
+            var ctx = this;
+            if (this.load === 'error') {
+                this.loaded = true;
+                this.$message({
+                    type: 'error',
+                    message: ctx.errorMsg,
+                    onClose() {
+                        if (ctx.errorMsg === '请先登录') {
+                            ctx.$store.commit('SWITCH_LOGIN_MODAL', true);
+                            return;
+                        }
+                        ctx.$router.push('/');
+                    }
+                });
             }
         }
     };
