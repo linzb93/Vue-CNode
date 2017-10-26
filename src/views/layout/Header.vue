@@ -257,7 +257,6 @@
         }
     }
     .login-form-tips {
-        margin-top: 9px;
         text-align: right;
         a {
             color: $conColor;
