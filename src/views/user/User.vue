@@ -82,8 +82,12 @@
         },
         watch: {
             '$store.state.userInfo.name'() {
+                if (this.isLoginUser) {
+                    return;
+                }
                 var userId = this.$route.params.id;
                 if (this.$store.state.userInfo.name === this.$route.params.id) {
+                    this.isLoginUser = true;
                     this.getCollectTopic(userId);
                 }
             }
@@ -92,8 +96,10 @@
             render(toUserId) {
                 var userId = toUserId || this.$route.params.id;
                 if (this.$store.state.userInfo.name === userId) {
-                    this.isLoginUser = true;
                     this.getCollectTopic(userId);
+                } else {
+                    this.isLoginUser = false;
+                    this.collectList = [];
                 }
                 getUserDetail(userId)
                 .then(res => {
