@@ -5,8 +5,8 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-default/index.css';
 
 import App from './App';
-import router from './router';
 import store from './store';
+import router from './router';
 
 Vue.use(ElementUI);
 Vue.config.productionTip = false;
@@ -15,7 +15,8 @@ Vue.config.productionTip = false;
 new Vue({
   el: '#app',
   template: '<App/>',
-  router,
   store,
+  router,
   components: { App }
 });
+

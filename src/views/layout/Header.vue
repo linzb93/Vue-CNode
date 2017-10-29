@@ -66,7 +66,7 @@
                     {
                         name: '消息',
                         url: '#/message',
-                        isDot: ctx.hasUnreadMsg
+                        isDot: false
                     }
                 ],
                 canSubmit: true,
@@ -141,16 +141,6 @@
                     callback(new Error('token不正确'));
                 });
             }
-        },
-        created() {
-            if (this.isLogin) {
-                getUnreadMsgCount(this.token)
-                .then(res => {
-                    if (res.data.data > 0) {
-                        this.$store.commit('TOGGLE_UNREAD_MSG_STATE', true);
-                    }
-                });
-            }
         }
     };
 </script>
@@ -163,6 +153,9 @@
         height: 60px;
         .wrapper {
             height: 100%;
+        }
+        .el-badge__content {
+            border: 0;
         }
         nav {
             float: left;

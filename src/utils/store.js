@@ -17,8 +17,6 @@ function remove(name) {
     localStorage.removeItem(name);
 }
 
-;
-
 export var ls = {
     store,
     remove
