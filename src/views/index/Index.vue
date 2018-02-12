@@ -37,6 +37,7 @@
     import cloneDeep from 'lodash/cloneDeep';
     import { getTopicList, createNewTopic } from '@/service';
     import { shorten, ago } from '@/filters';
+    import { tabs } from '@/store/constant';
     import Container from '@/views/layout/Container';
     import Pagination from '@/components/Pagination';
     import EmptyTips from '@/components/Empty';
@@ -62,7 +63,7 @@
         computed: {
             ...mapState(['token']),
             tabs() {
-                var arr = cloneDeep(this.$store.state.tabs);
+                var arr = cloneDeep(tabs);
                 arr.unshift({
                     id: 'all',
                     name: '全部'

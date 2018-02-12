@@ -1,6 +1,6 @@
 <template>
     <container :load="loadStatus" errorMsg="请先登录">
-        <div class="message-main wrapper" v-if="!!token">
+        <div class="message-main wrapper">
             <div class="message-block">
                 <div class="clearfix">
                     <h3>未读消息</h3>

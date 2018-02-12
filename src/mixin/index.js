@@ -3,6 +3,7 @@ export var loginMixin = {
         loginValidate() {
             var ctx = this;
             if (!this.token) {
+                this.loadStatus = 'error';
                 this.$message({
                     type: 'error',
                     message: '请先登录222',

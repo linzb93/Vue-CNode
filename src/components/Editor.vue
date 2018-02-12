@@ -25,6 +25,7 @@
     import MarkdownEditor from 'vue-simplemde/src/markdown-editor';
     import cloneDeep from 'lodash/cloneDeep';
     import { mapState } from 'vuex';
+    import { tabs } from '@/store/constant';
 
     export default {
         name: 'Editor',
@@ -108,7 +109,7 @@
         computed: {
             ...mapState(['token']),
             tabs() {
-                var tabArray = cloneDeep(this.$store.state.tabs);
+                var tabArray = cloneDeep(tabs);
                 tabArray.pop();
                 return tabArray;
             },
