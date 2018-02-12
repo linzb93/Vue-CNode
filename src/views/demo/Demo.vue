@@ -1,31 +1,16 @@
 <template>
-<el-form>
-    <el-form-item label="订阅指标表是否显示索引号">
-  <el-switch
-    v-model="config.subscriptionsOption.defaultShowIndex"
-    on-color="#13ce66"
-    off-color="#ff4949">
-    </el-switch>
- </el-form-item>
-</el-form>
+    <div class="com">
+        {{id}}
+    </div>
 </template>
 
 <script>
-export default {
-   data () {
-     return {
-       config: {
-	   	  subscriptionsOption: {
-		  	defaultShowDay: 10,
-			defaultShowIndex: true,
-			tableShowOption: {
-			  statisticsOption: [ ],
-			  moreOption: [ ],
-			  otherOption: [ ]
-			}
-		  }
-       }
-     }
-   }
- }
+    export default {
+        name: 'Demo',
+        data() {
+            return  {
+                id: 3
+            }
+        }
+    }
 </script>
