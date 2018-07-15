@@ -1,0 +1,12 @@
+{
+    "routes": [
+        {
+            "type": "get",
+            "url": "/getUser",
+            "respone": {
+                "name": "String",
+                "age": "Number"
+            }
+        }
+    ]
+}
