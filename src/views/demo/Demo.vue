@@ -1,31 +1,18 @@
 <template>
-<el-form>
-    <el-form-item label="订阅指标表是否显示索引号">
-  <el-switch
-    v-model="config.subscriptionsOption.defaultShowIndex"
-    on-color="#13ce66"
-    off-color="#ff4949">
-    </el-switch>
- </el-form-item>
-</el-form>
+<div></div>
 </template>
 
 <script>
+import axios from 'axios'; 
 export default {
-   data () {
-     return {
-       config: {
-	   	  subscriptionsOption: {
-		  	defaultShowDay: 10,
-			defaultShowIndex: true,
-			tableShowOption: {
-			  statisticsOption: [ ],
-			  moreOption: [ ],
-			  otherOption: [ ]
-			}
-		  }
-       }
-     }
-   }
+    created() {
+        axios.post('https://www.iyingdi.cn/hearthstone/unpack', {
+            series:13,
+            size:60
+        })
+        .then(function(res) {
+            console.log(res);
+        })
+    }
  }
 </script>
